@@ -589,23 +589,6 @@ class AnvioUtil:
 
         self._run_command(command)
 
-    def generate_anvio_extract_fasta_bins_command(self, task_params):
-        """
-        generate_command: anvio extract_fasta_bins
-        """
-        log("\n\nRunning generate_anvio_extract_fasta_bins_command")
-
-        contig_file_path = task_params['contig_file_path']
-
-        bin_result_directory = self.BINNER_RESULT_DIRECTORY + '/' + self.BINNER_BIN_RESULT_DIR
-        self._mkdir_p(bin_result_directory)
-        command = 'python {}/scripts/extract_fasta_bins.py '.format(self.ANVIO_BASE_PATH)
-        command += '{} '.format(contig_file_path)
-        command += '{}/clustering_merged.csv '.format(self.BINNER_RESULT_DIRECTORY)
-        command += '--output_path {}/{}'.format(self.BINNER_RESULT_DIRECTORY, self.BINNER_BIN_RESULT_DIR)
-        log('Generated generate_anvio_extract_fasta_bins_command command: {}'.format(command))
-
-        self._run_command(command)
 
     def rename_and_standardize_bin_names(self, task_params):
         """
@@ -810,15 +793,13 @@ class AnvioUtil:
 
         required params:
             assembly_ref: Metagenome assembly object reference
-            binned_contig_name: BinnedContig object name and output file header
             workspace_name: the name of the workspace it gets saved to.
             reads_list: list of reads object (PairedEndLibrary/SingleEndLibrary)
-            upon which ANVIO will be run
+            for input to anvio
 
         optional params:
             min_contig_length: minimum contig length; default 1000
 
-            ref: https://github.com/BinPro/ANVIO/blob/develop/README.md
         """
         log('--->\nrunning AnvioUtil.run_anvio\n' +
             'task_params:\n{}'.format(json.dumps(task_params, indent=1)))
