@@ -187,82 +187,82 @@ class AnvioUtil:
 
         return contig_file
 
-    def retrieve_and_clean_assembly(self, task_params):
-        if os.path.exists(task_params['contig_file_path']):
-            assembly = task_params['contig_file_path']
-            print("FOUND ASSEMBLY ON LOCAL SCRATCH")
-        else:
-            # we are on njsw so lets copy it over to scratch
-            assembly = self._get_contig_file(task_params['assembly_ref'])
+    # def retrieve_and_clean_assembly(self, task_params):
+    #     if os.path.exists(task_params['contig_file_path']):
+    #         assembly = task_params['contig_file_path']
+    #         print("FOUND ASSEMBLY ON LOCAL SCRATCH")
+    #     else:
+    #         # we are on njsw so lets copy it over to scratch
+    #         assembly = self._get_contig_file(task_params['assembly_ref'])
 
-        # remove spaces from fasta headers because that breaks bedtools
-        assembly_clean = os.path.abspath(assembly).split('.fa')[0] + "_clean.fa"
+    #     # remove spaces from fasta headers because that breaks bedtools
+    #     assembly_clean = os.path.abspath(assembly).split('.fa')[0] + "_clean.fa"
 
-        # file to dump the mapping from new headers to old
-        header_mapping_filepath = os.path.join(self.scratch, 'header_mapping_' + str(uuid.uuid4()))
+    #     # file to dump the mapping from new headers to old
+    #     header_mapping_filepath = os.path.join(self.scratch, 'header_mapping_' + str(uuid.uuid4()))
 
-        self.fhr.rename_fasta_headers(assembly, fasta_filepath_new=assembly_clean, cache_filepath=header_mapping_filepath)
+    #     self.fhr.rename_fasta_headers(assembly, fasta_filepath_new=assembly_clean, cache_filepath=header_mapping_filepath)
 
-        """
-        command = '/bin/bash reformat.sh in={} out={} addunderscore overwrite=true'.format(assembly, assembly_clean)
+    #     """
+    #     command = '/bin/bash reformat.sh in={} out={} addunderscore overwrite=true'.format(assembly, assembly_clean)
 
-        log('running reformat command: {}'.format(command))
-        out, err = self._run_command(command)
-        """
-        return assembly_clean
+    #     log('running reformat command: {}'.format(command))
+    #     out, err = self._run_command(command)
+    #     """
+    #     return assembly_clean
 
 
-    def generate_stats_for_genome_bins(self, task_params, genome_bin_fna_file, bbstats_output_file):
-        """
-        generate_command: bbtools stats.sh command
-        """
-        log("running generate_stats_for_genome_bins on {}".format(genome_bin_fna_file))
-        genome_bin_fna_file = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY, genome_bin_fna_file)
-        command = '/bin/bash stats.sh in={} format=3 > {}'.format(genome_bin_fna_file, bbstats_output_file)
-        self._run_command(command)
-        bbstats_output = open(bbstats_output_file, 'r').readlines()[1]
-        n_scaffolds = bbstats_output.split('\t')[0]
-        n_contigs = bbstats_output.split('\t')[1]
-        scaf_bp = bbstats_output.split('\t')[2]
-        contig_bp = bbstats_output.split('\t')[3]
-        gap_pct = bbstats_output.split('\t')[4]
-        scaf_N50 = bbstats_output.split('\t')[5]
-        scaf_L50 = bbstats_output.split('\t')[6]
-        ctg_N50 = bbstats_output.split('\t')[7]
-        ctg_L50 = bbstats_output.split('\t')[8]
-        scaf_N90 = bbstats_output.split('\t')[9]
-        scaf_L90 = bbstats_output.split('\t')[10]
-        ctg_N90 = bbstats_output.split('\t')[11]
-        ctg_L90 = bbstats_output.split('\t')[12]
-        scaf_max = bbstats_output.split('\t')[13]
-        ctg_max = bbstats_output.split('\t')[14]
-        scaf_n_gt50K = bbstats_output.split('\t')[15]
-        scaf_pct_gt50K = bbstats_output.split('\t')[16]
-        gc_avg = float(bbstats_output.split('\t')[17]) * 100  # need to figure out if correct
-        gc_std = float(bbstats_output.split('\t')[18]) * 100  # need to figure out if correct
+    # def generate_stats_for_genome_bins(self, task_params, genome_bin_fna_file, bbstats_output_file):
+    #     """
+    #     generate_command: bbtools stats.sh command
+    #     """
+    #     log("running generate_stats_for_genome_bins on {}".format(genome_bin_fna_file))
+    #     genome_bin_fna_file = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY, genome_bin_fna_file)
+    #     command = '/bin/bash stats.sh in={} format=3 > {}'.format(genome_bin_fna_file, bbstats_output_file)
+    #     self._run_command(command)
+    #     bbstats_output = open(bbstats_output_file, 'r').readlines()[1]
+    #     n_scaffolds = bbstats_output.split('\t')[0]
+    #     n_contigs = bbstats_output.split('\t')[1]
+    #     scaf_bp = bbstats_output.split('\t')[2]
+    #     contig_bp = bbstats_output.split('\t')[3]
+    #     gap_pct = bbstats_output.split('\t')[4]
+    #     scaf_N50 = bbstats_output.split('\t')[5]
+    #     scaf_L50 = bbstats_output.split('\t')[6]
+    #     ctg_N50 = bbstats_output.split('\t')[7]
+    #     ctg_L50 = bbstats_output.split('\t')[8]
+    #     scaf_N90 = bbstats_output.split('\t')[9]
+    #     scaf_L90 = bbstats_output.split('\t')[10]
+    #     ctg_N90 = bbstats_output.split('\t')[11]
+    #     ctg_L90 = bbstats_output.split('\t')[12]
+    #     scaf_max = bbstats_output.split('\t')[13]
+    #     ctg_max = bbstats_output.split('\t')[14]
+    #     scaf_n_gt50K = bbstats_output.split('\t')[15]
+    #     scaf_pct_gt50K = bbstats_output.split('\t')[16]
+    #     gc_avg = float(bbstats_output.split('\t')[17]) * 100  # need to figure out if correct
+    #     gc_std = float(bbstats_output.split('\t')[18]) * 100  # need to figure out if correct
 
-        log('Generated generate_stats_for_genome_bins command: {}'.format(command))
+    #     log('Generated generate_stats_for_genome_bins command: {}'.format(command))
 
-        return {'n_scaffolds': n_scaffolds,
-                'n_contigs': n_contigs,
-                'scaf_bp': scaf_bp,
-                'contig_bp': contig_bp,
-                'gap_pct': gap_pct,
-                'scaf_N50': scaf_N50,
-                'scaf_L50': scaf_L50,
-                'ctg_N50': ctg_N50,
-                'ctg_L50': ctg_L50,
-                'scaf_N90': scaf_N90,
-                'scaf_L90': scaf_L90,
-                'ctg_N90': ctg_N90,
-                'ctg_L90': ctg_L90,
-                'scaf_max': scaf_max,
-                'ctg_max': ctg_max,
-                'scaf_n_gt50K': scaf_n_gt50K,
-                'scaf_pct_gt50K': scaf_pct_gt50K,
-                'gc_avg': gc_avg,
-                'gc_std': gc_std
-                }
+    #     return {'n_scaffolds': n_scaffolds,
+    #             'n_contigs': n_contigs,
+    #             'scaf_bp': scaf_bp,
+    #             'contig_bp': contig_bp,
+    #             'gap_pct': gap_pct,
+    #             'scaf_N50': scaf_N50,
+    #             'scaf_L50': scaf_L50,
+    #             'ctg_N50': ctg_N50,
+    #             'ctg_L50': ctg_L50,
+    #             'scaf_N90': scaf_N90,
+    #             'scaf_L90': scaf_L90,
+    #             'ctg_N90': ctg_N90,
+    #             'ctg_L90': ctg_L90,
+    #             'scaf_max': scaf_max,
+    #             'ctg_max': ctg_max,
+    #             'scaf_n_gt50K': scaf_n_gt50K,
+    #             'scaf_pct_gt50K': scaf_pct_gt50K,
+    #             'gc_avg': gc_avg,
+    #             'gc_std': gc_std
+    #             }
 
     def deinterlace_raw_reads(self, fastq):
         fastq_forward = fastq.split('.fastq')[0] + "_forward.fastq"
@@ -496,148 +496,148 @@ class AnvioUtil:
 
         return depth_file_path
 
-    def fix_generate_anvio_command_ui_bug(self, task_params):
-        # needed to get checkbox for UI to work with string objects, for some
-        # reason strings are converted to numerics when running inside KBase UI.
-        parameter_no_total_coverage = task_params['no_total_coverage']
-        parameter_no_cov_normalization = task_params['no_cov_normalization']
+    # def fix_generate_anvio_command_ui_bug(self, task_params):
+    #     # needed to get checkbox for UI to work with string objects, for some
+    #     # reason strings are converted to numerics when running inside KBase UI.
+    #     parameter_no_total_coverage = task_params['no_total_coverage']
+    #     parameter_no_cov_normalization = task_params['no_cov_normalization']
 
-        if task_params['no_total_coverage'] is 1:
-            parameter_no_total_coverage = '--no_total_coverage'
-        elif task_params['no_total_coverage'] is 0:
-            parameter_no_total_coverage = ' '
+    #     if task_params['no_total_coverage'] is 1:
+    #         parameter_no_total_coverage = '--no_total_coverage'
+    #     elif task_params['no_total_coverage'] is 0:
+    #         parameter_no_total_coverage = ' '
 
-        if task_params['no_cov_normalization'] is 1:
-            parameter_no_cov_normalization = '--no_cov_normalization'
-        elif task_params['no_cov_normalization'] is 0:
-            parameter_no_cov_normalization = ' '
+    #     if task_params['no_cov_normalization'] is 1:
+    #         parameter_no_cov_normalization = '--no_cov_normalization'
+    #     elif task_params['no_cov_normalization'] is 0:
+    #         parameter_no_cov_normalization = ' '
 
-        return (parameter_no_total_coverage, parameter_no_cov_normalization)
+    #     return (parameter_no_total_coverage, parameter_no_cov_normalization)
 
-    def generate_anvio_cut_up_fasta_command(self, task_params):
-        """
-        generate_command: anvio cut_up_fasta
-        """
-        contig_file_path = task_params['contig_file_path']
-        contig_split_size = task_params['contig_split_size']
-        contig_split_overlap = task_params['contig_split_overlap']
+    # def generate_anvio_cut_up_fasta_command(self, task_params):
+    #     """
+    #     generate_command: anvio cut_up_fasta
+    #     """
+    #     contig_file_path = task_params['contig_file_path']
+    #     contig_split_size = task_params['contig_split_size']
+    #     contig_split_overlap = task_params['contig_split_overlap']
 
-        log("\n\nRunning generate_anvio_cut_up_fasta_command")
+    #     log("\n\nRunning generate_anvio_cut_up_fasta_command")
 
-        command = 'python {}/scripts/cut_up_fasta.py '.format(self.ANVIO_BASE_PATH)
-        command += '{} '.format(contig_file_path)
-        command += '-c {} '.format(contig_split_size)
-        command += '-o {} '.format(contig_split_overlap)
-        command += '--merge_last -b temp.bed > {}/split_contigs.fa'.format(self.BINNER_RESULT_DIRECTORY)
-        log('Generated anvio_cut_up_fasta command: {}'.format(command))
+    #     command = 'python {}/scripts/cut_up_fasta.py '.format(self.ANVIO_BASE_PATH)
+    #     command += '{} '.format(contig_file_path)
+    #     command += '-c {} '.format(contig_split_size)
+    #     command += '-o {} '.format(contig_split_overlap)
+    #     command += '--merge_last -b temp.bed > {}/split_contigs.fa'.format(self.BINNER_RESULT_DIRECTORY)
+    #     log('Generated anvio_cut_up_fasta command: {}'.format(command))
 
-        self._run_command(command)
+    #     self._run_command(command)
 
-    def generate_anvio_coverage_table_from_bam(self, task_params):
-        """
-        generate_command: anvio generate coverage table
-        """
-        log("\n\nRunning generate_anvio_coverage_table_from_bam")
-        command = 'python {}/scripts/concoct_coverage_table.py temp.bed '.format(self.ANVIO_BASE_PATH)
-        command += '{}/*_sorted.bam > '.format(self.BINNER_RESULT_DIRECTORY)
-        command += '{}/coverage_table.tsv'.format(self.BINNER_RESULT_DIRECTORY)
-        log('Generated anvio generate coverage table from bam command: {}'.format(command))
+    # def generate_anvio_coverage_table_from_bam(self, task_params):
+    #     """
+    #     generate_command: anvio generate coverage table
+    #     """
+    #     log("\n\nRunning generate_anvio_coverage_table_from_bam")
+    #     command = 'python {}/scripts/concoct_coverage_table.py temp.bed '.format(self.ANVIO_BASE_PATH)
+    #     command += '{}/*_sorted.bam > '.format(self.BINNER_RESULT_DIRECTORY)
+    #     command += '{}/coverage_table.tsv'.format(self.BINNER_RESULT_DIRECTORY)
+    #     log('Generated anvio generate coverage table from bam command: {}'.format(command))
 
-        self._run_command(command)
+    #     self._run_command(command)
 
-    def generate_anvio_command(self, task_params):
-        """
-        generate_command: anvio
-        """
+    # def generate_anvio_command(self, task_params):
+    #     """
+    #     generate_command: anvio
+    #     """
 
-        min_contig_length = task_params['min_contig_length']
-        kmer_size = task_params['kmer_size']
-        max_clusters_for_vgmm = task_params['max_clusters_for_vgmm']
-        max_iterations_for_vgmm = task_params['max_iterations_for_vgmm']
-        total_percentage_pca = task_params['total_percentage_pca']
-        parameter_no_total_coverage, parameter_no_cov_normalization = \
-            self.fix_generate_anvio_command_ui_bug(task_params)
+    #     min_contig_length = task_params['min_contig_length']
+    #     kmer_size = task_params['kmer_size']
+    #     max_clusters_for_vgmm = task_params['max_clusters_for_vgmm']
+    #     max_iterations_for_vgmm = task_params['max_iterations_for_vgmm']
+    #     total_percentage_pca = task_params['total_percentage_pca']
+    #     parameter_no_total_coverage, parameter_no_cov_normalization = \
+    #         self.fix_generate_anvio_command_ui_bug(task_params)
 
-        log("\n\nRunning generate_anvio_command")
-        command = 'python {}/bin/concoct '.format(self.ANVIO_BASE_PATH)
-        command += '--composition_file {}/split_contigs.fa '.format(self.BINNER_RESULT_DIRECTORY)
-        command += '-l {} '.format(min_contig_length)
-        command += '-b {} '.format(self.BINNER_RESULT_DIRECTORY)
-        command += '--coverage_file {}/coverage_table.tsv '.format(self.BINNER_RESULT_DIRECTORY)
-        command += '-t {} '.format(self.MAPPING_THREADS)
-        command += '-k {} '.format(kmer_size)
-        command += '-c {} '.format(max_clusters_for_vgmm)
-        command += '-i {} '.format(max_iterations_for_vgmm)
-        command += '--total_percentage_pca {} '.format(total_percentage_pca)
-        command += '{} '.format(parameter_no_cov_normalization)
-        command += '{}'.format(parameter_no_total_coverage)
-        log('Generated anvio command: {}'.format(command))
+    #     log("\n\nRunning generate_anvio_command")
+    #     command = 'python {}/bin/concoct '.format(self.ANVIO_BASE_PATH)
+    #     command += '--composition_file {}/split_contigs.fa '.format(self.BINNER_RESULT_DIRECTORY)
+    #     command += '-l {} '.format(min_contig_length)
+    #     command += '-b {} '.format(self.BINNER_RESULT_DIRECTORY)
+    #     command += '--coverage_file {}/coverage_table.tsv '.format(self.BINNER_RESULT_DIRECTORY)
+    #     command += '-t {} '.format(self.MAPPING_THREADS)
+    #     command += '-k {} '.format(kmer_size)
+    #     command += '-c {} '.format(max_clusters_for_vgmm)
+    #     command += '-i {} '.format(max_iterations_for_vgmm)
+    #     command += '--total_percentage_pca {} '.format(total_percentage_pca)
+    #     command += '{} '.format(parameter_no_cov_normalization)
+    #     command += '{}'.format(parameter_no_total_coverage)
+    #     log('Generated anvio command: {}'.format(command))
 
-        self._run_command(command)
+    #     self._run_command(command)
 
-    def generate_anvio_post_clustering_merging_command(self, task_params):
-        """
-        generate_command: anvio post cluster merging
-        """
-        min_contig_length = task_params['min_contig_length']
-        log("\n\nRunning generate_anvio_post_clustering_merging_command")
+    # def generate_anvio_post_clustering_merging_command(self, task_params):
+    #     """
+    #     generate_command: anvio post cluster merging
+    #     """
+    #     min_contig_length = task_params['min_contig_length']
+    #     log("\n\nRunning generate_anvio_post_clustering_merging_command")
 
-        command = 'python {}/scripts/merge_cutup_clustering.py '.format(self.ANVIO_BASE_PATH)
-        command += '{}/clustering_gt{}.csv > '.format(self.BINNER_RESULT_DIRECTORY, min_contig_length)
-        command += '{}/clustering_merged.csv'.format(self.BINNER_RESULT_DIRECTORY)
-        log('Generated generate_anvio_post_clustering_merging command: {}'.format(command))
+    #     command = 'python {}/scripts/merge_cutup_clustering.py '.format(self.ANVIO_BASE_PATH)
+    #     command += '{}/clustering_gt{}.csv > '.format(self.BINNER_RESULT_DIRECTORY, min_contig_length)
+    #     command += '{}/clustering_merged.csv'.format(self.BINNER_RESULT_DIRECTORY)
+    #     log('Generated generate_anvio_post_clustering_merging command: {}'.format(command))
 
-        self._run_command(command)
-
-
-    def rename_and_standardize_bin_names(self, task_params):
-        """
-        generate_command: generate renamed bins
-        """
-        log("\n\nRunning rename_and_standardize_bin_names")
-        path_to_anvio_result_bins = os.path.abspath(self.BINNER_RESULT_DIRECTORY) + \
-            '/' + self.BINNER_BIN_RESULT_DIR + '/'
-        for dirname, subdirs, files in os.walk(path_to_anvio_result_bins):
-            for file in files:
-                if file.endswith('.fa'):
-                    os.rename(os.path.abspath(path_to_anvio_result_bins) + '/' +
-                              file, os.path.abspath(path_to_anvio_result_bins) + '/bin.' +
-                              file.split('.fa')[0].zfill(3) + '.fasta')  # need to change to 4 digits
-
-    def revert_fasta_headers(self, task_params):
-        path_to_anvio_result_bins = os.path.join(
-            self.scratch,
-            self.BINNER_RESULT_DIRECTORY,
-            self.BINNER_BIN_RESULT_DIR
-            )
-        for filepath in [os.path.join(path_to_anvio_result_bins, filename) for filename in os.listdir(path_to_anvio_result_bins)]:
-            self.fhr.revert_fasta_headers(filepath)
+    #     self._run_command(command)
 
 
-    def make_binned_contig_summary_file_for_binning_apps(self, task_params):
-        """
-        generate_command: generate binned contig summary command
-        """
-        log("\n\nRunning make_binned_contig_summary_file_for_binning_apps")
-        path_to_anvio_result = os.path.abspath(self.BINNER_RESULT_DIRECTORY)
-        path_to_anvio_result_bins = '{}/{}/'.format(path_to_anvio_result, self.BINNER_BIN_RESULT_DIR)
-        path_to_summary_file = path_to_anvio_result_bins + 'binned_contig.summary'
-        with open(path_to_summary_file, 'w+') as f:
-            f.write("Bin name\tCompleteness\tGenome size\tGC content\n")
-            for dirname, subdirs, files in os.walk(path_to_anvio_result_bins):
-                for file in files:
-                    if file.endswith('.fasta'):
-                        genome_bin_fna_file = os.path.join(self.BINNER_BIN_RESULT_DIR, file)
-                        bbstats_output_file = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY,
-                                                           genome_bin_fna_file).split('.fasta')[0] + ".bbstatsout"
-                        bbstats_output = self.generate_stats_for_genome_bins(task_params,
-                                                                             genome_bin_fna_file,
-                                                                             bbstats_output_file)
-                        f.write('{}\t0\t{}\t{}\n'.format(genome_bin_fna_file.split("/")[-1],
-                                                         bbstats_output['contig_bp'],
-                                                         bbstats_output['gc_avg']))
-        f.close()
-        log('Finished make_binned_contig_summary_file_for_binning_apps function')
+    # def rename_and_standardize_bin_names(self, task_params):
+    #     """
+    #     generate_command: generate renamed bins
+    #     """
+    #     log("\n\nRunning rename_and_standardize_bin_names")
+    #     path_to_anvio_result_bins = os.path.abspath(self.BINNER_RESULT_DIRECTORY) + \
+    #         '/' + self.BINNER_BIN_RESULT_DIR + '/'
+    #     for dirname, subdirs, files in os.walk(path_to_anvio_result_bins):
+    #         for file in files:
+    #             if file.endswith('.fa'):
+    #                 os.rename(os.path.abspath(path_to_anvio_result_bins) + '/' +
+    #                           file, os.path.abspath(path_to_anvio_result_bins) + '/bin.' +
+    #                           file.split('.fa')[0].zfill(3) + '.fasta')  # need to change to 4 digits
+
+    # def revert_fasta_headers(self, task_params):
+    #     path_to_anvio_result_bins = os.path.join(
+    #         self.scratch,
+    #         self.BINNER_RESULT_DIRECTORY,
+    #         self.BINNER_BIN_RESULT_DIR
+    #         )
+    #     for filepath in [os.path.join(path_to_anvio_result_bins, filename) for filename in os.listdir(path_to_anvio_result_bins)]:
+    #         self.fhr.revert_fasta_headers(filepath)
+
+
+    # def make_binned_contig_summary_file_for_binning_apps(self, task_params):
+    #     """
+    #     generate_command: generate binned contig summary command
+    #     """
+    #     log("\n\nRunning make_binned_contig_summary_file_for_binning_apps")
+    #     path_to_anvio_result = os.path.abspath(self.BINNER_RESULT_DIRECTORY)
+    #     path_to_anvio_result_bins = '{}/{}/'.format(path_to_anvio_result, self.BINNER_BIN_RESULT_DIR)
+    #     path_to_summary_file = path_to_anvio_result_bins + 'binned_contig.summary'
+    #     with open(path_to_summary_file, 'w+') as f:
+    #         f.write("Bin name\tCompleteness\tGenome size\tGC content\n")
+    #         for dirname, subdirs, files in os.walk(path_to_anvio_result_bins):
+    #             for file in files:
+    #                 if file.endswith('.fasta'):
+    #                     genome_bin_fna_file = os.path.join(self.BINNER_BIN_RESULT_DIR, file)
+    #                     bbstats_output_file = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY,
+    #                                                        genome_bin_fna_file).split('.fasta')[0] + ".bbstatsout"
+    #                     bbstats_output = self.generate_stats_for_genome_bins(task_params,
+    #                                                                          genome_bin_fna_file,
+    #                                                                          bbstats_output_file)
+    #                     f.write('{}\t0\t{}\t{}\n'.format(genome_bin_fna_file.split("/")[-1],
+    #                                                      bbstats_output['contig_bp'],
+    #                                                      bbstats_output['gc_avg']))
+    #     f.close()
+    #     log('Finished make_binned_contig_summary_file_for_binning_apps function')
 
     def generate_output_file_list(self, result_directory):
         """
@@ -810,9 +810,11 @@ class AnvioUtil:
         contig_file = self._get_contig_file(task_params['assembly_ref'])
         task_params['contig_file_path'] = contig_file
 
+        # anvi-script-reformat-fasta
+
         # clean the assembly file so that there are no spaces in the fasta headers
-        assembly_clean = self.retrieve_and_clean_assembly(task_params)
-        task_params['contig_file_path'] = assembly_clean
+        #assembly_clean = self.retrieve_and_clean_assembly(task_params)
+        #task_params['contig_file_path'] = assembly_clean
 
         # get reads
         (reads_list_file, read_type) = self.stage_reads_list_file(task_params['reads_list'])
@@ -826,6 +828,17 @@ class AnvioUtil:
         cwd = os.getcwd()
         log('changing working dir to {}'.format(result_directory))
         os.chdir(result_directory)
+
+        # anvi-run-hmms
+        # anvi-run-ncbi-cogs
+        # anvi-run-pfams
+        # anvi-run-kegg-kofams
+        # anvi-run-interacdome
+        # anvi-run-scg-taxonomy
+        # anvi-scan-trnas
+        # anvi-run-trna-taxonomy
+
+
 
         # set up tasks for kbparallel to run alignments
         # this also submits run_alignments function in parallel
@@ -843,27 +856,27 @@ class AnvioUtil:
         # depth_dict = self.create_dict_from_depth_file(depth_file_path)
 
         # run anvio prep, cut up fasta input
-        self.generate_anvio_cut_up_fasta_command(task_params)
+        #self.generate_anvio_cut_up_fasta_command(task_params)
 
         # run anvio make coverage table from bam
-        self.generate_anvio_coverage_table_from_bam(task_params)
+        #self.generate_anvio_coverage_table_from_bam(task_params)
 
         # run anvio prep and anvio
-        self.generate_anvio_command(task_params)
+        #self.generate_anvio_command(task_params)
 
         # run anvio post cluster merging command
-        self.generate_anvio_post_clustering_merging_command(task_params)
+        #self.generate_anvio_post_clustering_merging_command(task_params)
 
         # run extract bins command
-        self.generate_anvio_extract_fasta_bins_command(task_params)
+        #self.generate_anvio_extract_fasta_bins_command(task_params)
 
         # run fasta renaming
-        self.rename_and_standardize_bin_names(task_params)
+        #self.rename_and_standardize_bin_names(task_params)
 
         # revert fasta headers in bins
-        self.revert_fasta_headers(task_params)
+        #self.revert_fasta_headers(task_params)
 
-        self.make_binned_contig_summary_file_for_binning_apps(task_params)
+        #self.make_binned_contig_summary_file_for_binning_apps(task_params)
 
         # file handling and management
         os.chdir(cwd)
@@ -873,21 +886,20 @@ class AnvioUtil:
         log('Generated files:\n{}'.format('\n'.join(os.listdir(result_directory))))
 
         # make new BinnedContig object and upload to KBase
-        generate_binned_contig_param = {
-            'file_directory': os.path.join(result_directory, self.BINNER_BIN_RESULT_DIR),
-            'assembly_ref': task_params['assembly_ref'],
-            'binned_contig_name': task_params['binned_contig_name'],
-            'workspace_name': task_params['workspace_name']
-        }
+        # generate_binned_contig_param = {
+        #     'file_directory': os.path.join(result_directory, self.BINNER_BIN_RESULT_DIR),
+        #     'assembly_ref': task_params['assembly_ref'],
+        #     'binned_contig_name': task_params['binned_contig_name'],
+        #     'workspace_name': task_params['workspace_name']
+        # }
 
-        binned_contig_obj_ref = \
-            self.mgu.file_to_binned_contigs(generate_binned_contig_param).get('binned_contig_obj_ref')
+        # binned_contig_obj_ref = \
+        #     self.mgu.file_to_binned_contigs(generate_binned_contig_param).get('binned_contig_obj_ref')
 
         # generate report
-        reportVal = self.generate_report(binned_contig_obj_ref, task_params)
+        reportVal = self.generate_report(task_params)
         returnVal = {
             'result_directory': result_directory,
-            'binned_contig_obj_ref': binned_contig_obj_ref
         }
         returnVal.update(reportVal)
 

@@ -33,11 +33,6 @@ parameters :
         short-hint : Metagenome assembly object
         long-hint  : Metagenome assembly that you want to bin
 
-    binned_contig_name :
-        ui-name : Output Bins
-        short-hint : Output BinnedContig object name
-        long-hint  : The name of the resulting bin object
-
     reads_list :
         ui-name : Reads
         short-hint : A list of reads object (PairedEndLibrary/SingleEndLibrary) upon which ANVIO will be run
@@ -52,46 +47,6 @@ parameters :
         ui-name : Minimum Contig Length (>1000bp)
         short-hint : minimum contig length (default 2500bp)
         long-hint  : minimum contig length must be less than 1000bp
-
-    contig_split_size :
-        ui-name : Contig Split Size (>=5000bp)
-        short-hint : contig split size (default 10000bp)
-        long-hint  : split contigs longer than this value into chunks this size during binning
-
-    contig_split_overlap :
-        ui-name : Contig Split Overlap (>=0bp)
-        short-hint : contig split overlap (default 0bp)
-        long-hint  : split contig overlap to use for binning input
-
-    kmer_size :
-        ui-name : Kmer Length
-        short-hint : kmer length (default 4)
-        long-hint  : kmer length (default 4)
-
-    max_clusters_for_vgmm :
-        ui-name : Maximum Number of Clusters for VGMM
-        short-hint : maximum number of clusters for VGMM (default 400)
-        long-hint  : maximum number of clusters for VGMM (default 400)
-
-    max_iterations_for_vgmm :
-        ui-name : Maximum Number of Iterations for VGMM
-        short-hint : maximum number of iterations for VGMM (default 500)
-        long-hint  : maximum number of iterations for VGMM (default 500)
-
-    total_percentage_pca :
-        ui-name : Percent of Total PCA Used
-        short-hint : percentage of variance explained by the principal components of the combined data (default 90)
-        long-hint  : percentage of variance explained by the principal components of the combined data (default 90)
-
-    no_cov_normalization :
-        ui-name : Skip Coverage Normalization
-        short-hint : skip coverage normalization step (default false)
-        long-hint  : skip coverage normalization step (default false)
-
-    no_total_coverage :
-        ui-name : Skip Using Total Coverage
-        short-hint : skip adding total coverage to the covergae data matrix (default false)
-        long-hint  : skip adding total coverage to the covergae data matrix (default false)
 
 description : |
     <p>ANVIO clusters metagenomic contigs into different "bins", each of which should correspond to a putative genome.</p>

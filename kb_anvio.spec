@@ -16,35 +16,21 @@ module kb_anvio {
     /*
         required params:
         assembly_ref: Genome assembly object reference
-        binned_contig_name: BinnedContig object name and output file header
         workspace_name: the name of the workspace it gets saved to.
         reads_list: list of reads object (PairedEndLibrary/SingleEndLibrary) upon which ANVIO will be run
 
         optional params:
-        thread: number of threads; default 1
         min_contig_length: minimum contig length; default 1000bp
-        contig_split_size: length to split long contigs; default 10000bp
-        contig_split_overlap: length to split long contigs; default 0bp
         ref: https://github.com/merenlab/anvio
 
     */
     typedef structure {
         obj_ref assembly_ref;
-        string binned_contig_name;
         string workspace_name;
         list<obj_ref> reads_list;
 
-        int thread;
         string read_mapping_tool;
         int min_contig_length;
-        int contig_split_size;
-        int contig_split_overlap;
-        int kmer_size;
-        int max_clusters_for_vgmm;
-        int max_iterations_for_vgmm;
-        int total_percentage_pca;
-        string no_cov_normalization;
-        string no_total_coverage;
 
 
     } AnvioInputParams;
@@ -56,7 +42,6 @@ module kb_anvio {
     */
     typedef structure{
         string result_directory;
-        obj_ref binned_contig_obj_ref;
         string report_name;
         string report_ref;
     }AnvioResult;
