@@ -30,10 +30,10 @@ def log(message, prefix_newline=False):
 
 
 class AnvioUtil:
-    ANVIO_BASE_PATH = '/kb/deployment/bin/CONCOCT'
-    BINNER_RESULT_DIRECTORY = 'anvio_output_dir'
+    #ANVIO_BASE_PATH = '/kb/deployment/bin/ANVIO'
+    ANVIO_RESULT_DIRECTORY = 'anvio_output_dir'
     BINNER_BIN_RESULT_DIR = 'final_bins'
-    MAPPING_THREADS = 16
+    MAPPING_THREADS = 4
     BBMAP_MEM = '30g'
     MAX_NODES = 6  # for KBParallels
 
@@ -110,7 +110,7 @@ class AnvioUtil:
         log('Start validating run_anvio params')
 
         # check for required parameters
-        for p in ['assembly_ref', 'binned_contig_name', 'workspace_name', 'reads_list', 'read_mapping_tool']:
+        for p in ['assembly_ref', 'workspace_name', 'reads_list', 'read_mapping_tool', 'kmer_size', 'contig_split_size', 'min_contig_length']:
             if p not in task_params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
@@ -186,6 +186,42 @@ class AnvioUtil:
         contig_file = self.dfu.unpack_file({'file_path': contig_file})['file_path']
 
         return contig_file
+
+    def run_anvi_script_reformat_fasta(self, task_params):
+        min_contig_length = task_params['min_contig_length']
+        contig_file_path = task_params['contig_file_path']
+
+        clean_contig_file_path = task_params['contig_file_path'] + "_anvio-reformatted"
+        command = 'anvi-script-reformat-fasta '
+        command += '{} '.format(contig_file_path)
+        command += '-o {} '.format(clean_contig_file_path)
+        command += '-l {} '.format(min_contig_length)
+        command += '--simplify-names'
+
+        log('running anvi_script_reformat_fasta: {}'.format(command))
+        self._run_command(command)
+        return clean_contig_file_path
+
+    def run_anvi_gen_contigs_database(self, task_params):
+        min_contig_length = task_params['min_contig_length']
+        contig_file_path = task_params['contig_file_path']
+        contig_split_size = task_params['contig_split_size']
+        kmer_size = task_params['kmer_size']
+
+        clean_contig_file_path = task_params['contig_file_path'] + "_anvio-reformatted"
+        command = 'anvi-gen-contigs-database '
+        command += '-f {} '.format(contig_file_path)
+        command += '-o contigs.db '
+        command += '--split-length {} '.format(contig_split_size)
+        command += '--kmer-size {} '.format(kmer_size)
+        command += '-T 10 '
+        command += '--prodigal-translation-table 11 '
+        command += '-n "{} contig database"'.format(contig_file_path.split("/")[-1])
+
+        log('running anvi_gen_contigs_database: {}'.format(command))
+        self._run_command(command)
+
+
 
     # def retrieve_and_clean_assembly(self, task_params):
     #     if os.path.exists(task_params['contig_file_path']):
@@ -418,6 +454,7 @@ class AnvioUtil:
         log('running alignment command: {}'.format(command))
         out, err = self._run_command(command)
 
+
     def convert_sam_to_sorted_and_indexed_bam(self, sam):
         # create bam files from sam files
         sorted_bam = os.path.abspath(sam).split('.sam')[0] + "_sorted.bam"
@@ -444,7 +481,28 @@ class AnvioUtil:
 
         return sorted_bam
 
-    def generate_alignment_bams(self, task_params, assembly_clean):
+    def run_anvi_init_bam(self, sorted_bam):
+        sorted_raw_bam = sorted_bam + "-RAW.bam"
+        command = 'anvi-init-bam '
+        command += '{} '.format(sorted_bam)
+        command += '-o {} '.format(sorted_raw_bam)
+        command += '-T 10 '
+
+        log('running anvi_init_bam: {}'.format(command))
+        self._run_command(command)
+        return sorted_raw_bam
+
+    def run_anvi_profile(self, raw_sorted_bam):
+        command = 'anvi-profile '
+        command += '-i {} '.format(raw_sorted_bam)
+        command += '-c contigs.db '
+        command += '-T 10 '
+
+        log('running anvi-profile: {}'.format(command))
+        self._run_command(command)
+
+
+    def generate_alignment_bams_and_prep_for_anvio(self, task_params, assembly_clean):
         """
             This function runs the selected read mapper and creates the
             sorted and indexed bam files from sam files using samtools.
@@ -464,7 +522,7 @@ class AnvioUtil:
             fastq_type = read_type[i]
 
             sam = os.path.basename(fastq).split('.fastq')[0] + ".sam"
-            sam = os.path.join(self.BINNER_RESULT_DIRECTORY, sam)
+            #sam = os.path.join(self.ANVIO_RESULT_DIRECTORY, sam)
 
             if fastq_type == 'interleaved':  # make sure working - needs tests
                 log("Running interleaved read mapping mode")
@@ -477,24 +535,39 @@ class AnvioUtil:
 
             sorted_bam_file_list.append(sorted_bam)
 
+            raw_sorted_bam = self.run_anvi_init_bam(sorted_bam)
+
+            self.run_anvi_profile(raw_sorted_bam)
+
         return sorted_bam_file_list
 
-    def generate_make_coverage_table_command(self, task_params, sorted_bam_file_list):
-        # create the depth file for this bam
-        #
-        min_contig_length = task_params['min_contig_length']
-        sorted_bam = task_params['sorted_bam']
+    def run_anvi_merge(self, task_params):
+        command = 'anvi-merge '
+        command += '*/PROFILE.db '
+        command += '-o SAMPLES-MERGED '
+        command += '-c contigs.db '
+        command += '--enforce-hierarchical-clustering'
 
-        depth_file_path = os.path.join(self.scratch, str('anvio_depth.txt'))
-        command = '/kb/module/lib/kb_anvio/bin/jgi_summarize_bam_contig_depths '
-        command += '--outputDepth {} '.format(depth_file_path)
-        command += '--minContigLength {} '.format(min_contig_length)
-        command += '--minContigDepth 1 {}'.format(sorted_bam)
-
-        log('running summarize_bam_contig_depths command: {}'.format(command))
+        log('running run_anvi_merge: {}'.format(command))
         self._run_command(command)
 
-        return depth_file_path
+
+    # def generate_make_coverage_table_command(self, task_params, sorted_bam_file_list):
+    #     # create the depth file for this bam
+    #     #
+    #     min_contig_length = task_params['min_contig_length']
+    #     sorted_bam = task_params['sorted_bam']
+
+    #     depth_file_path = os.path.join(self.scratch, str('anvio_depth.txt'))
+    #     command = '/kb/module/lib/kb_anvio/bin/jgi_summarize_bam_contig_depths '
+    #     command += '--outputDepth {} '.format(depth_file_path)
+    #     command += '--minContigLength {} '.format(min_contig_length)
+    #     command += '--minContigDepth 1 {}'.format(sorted_bam)
+
+    #     log('running summarize_bam_contig_depths command: {}'.format(command))
+    #     self._run_command(command)
+
+    #     return depth_file_path
 
     # def fix_generate_anvio_command_ui_bug(self, task_params):
     #     # needed to get checkbox for UI to work with string objects, for some
@@ -677,7 +750,7 @@ class AnvioUtil:
 
         return output_files
 
-    def generate_html_report(self, result_directory, assembly_ref, binned_contig_obj_ref):
+    def generate_html_report(self, result_directory, assembly_ref):
         """
         generate_html_report: generate html summary report
         """
@@ -692,12 +765,12 @@ class AnvioUtil:
         # get summary data from existing assembly object and bins_objects
         Summary_Table_Content = ''
         Overview_Content = ''
-        (binned_contig_count, input_contig_count, total_bins_count) = \
-            self.generate_overview_info(assembly_ref, binned_contig_obj_ref, result_directory)
+        # (binned_contig_count, input_contig_count, total_bins_count) = \
+        #     self.generate_overview_info(assembly_ref, binned_contig_obj_ref, result_directory)
 
-        Overview_Content += '<p>Binned contigs: {}</p>'.format(binned_contig_count)
-        Overview_Content += '<p>Input contigs: {}</p>'.format(input_contig_count)
-        Overview_Content += '<p>Number of bins: {}</p>'.format(total_bins_count)
+        # Overview_Content += '<p>Binned contigs: {}</p>'.format(binned_contig_count)
+        # Overview_Content += '<p>Input contigs: {}</p>'.format(input_contig_count)
+        # Overview_Content += '<p>Number of bins: {}</p>'.format(total_bins_count)
 
         with open(result_file_path, 'w') as result_file:
             with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
@@ -715,26 +788,26 @@ class AnvioUtil:
                             'description': 'HTML summary report for kb_anvio App'})
         return html_report
 
-    def generate_overview_info(self, assembly_ref, binned_contig_obj_ref, result_directory):
-        """
-        _generate_overview_info: generate overview information from assembly and binnedcontig
-        """
+    # def generate_overview_info(self, assembly_ref, binned_contig_obj_ref, result_directory):
+    #     """
+    #     _generate_overview_info: generate overview information from assembly and binnedcontig
+    #     """
 
-        # get assembly and binned_contig objects that already have some data populated in them
-        assembly = self.dfu.get_objects({'object_refs': [assembly_ref]})['data'][0]
-        binned_contig = self.dfu.get_objects({'object_refs': [binned_contig_obj_ref]})['data'][0]
+    #     # get assembly and binned_contig objects that already have some data populated in them
+    #     assembly = self.dfu.get_objects({'object_refs': [assembly_ref]})['data'][0]
+    #     binned_contig = self.dfu.get_objects({'object_refs': [binned_contig_obj_ref]})['data'][0]
 
-        input_contig_count = assembly.get('data').get('num_contigs')
-        binned_contig_count = 0
-        total_bins_count = 0
-        total_bins = binned_contig.get('data').get('bins')
-        total_bins_count = len(total_bins)
-        for bin in total_bins:
-            binned_contig_count += len(bin.get('contigs'))
+    #     input_contig_count = assembly.get('data').get('num_contigs')
+    #     binned_contig_count = 0
+    #     total_bins_count = 0
+    #     total_bins = binned_contig.get('data').get('bins')
+    #     total_bins_count = len(total_bins)
+    #     for bin in total_bins:
+    #         binned_contig_count += len(bin.get('contigs'))
 
-        return (binned_contig_count, input_contig_count, total_bins_count)
+    #     return (binned_contig_count, input_contig_count, total_bins_count)
 
-    def generate_report(self, binned_contig_obj_ref, task_params):
+    def generate_report(self, task_params):
         """
         generate_report: generate summary report
         """
@@ -747,8 +820,7 @@ class AnvioUtil:
         output_files = self.generate_output_file_list(task_params['result_directory'])
 
         output_html_files = self.generate_html_report(task_params['result_directory'],
-                                                      task_params['assembly_ref'],
-                                                      binned_contig_obj_ref)
+                                                      task_params['assembly_ref'])
 
         report_params = {
             'message': '',
@@ -767,25 +839,25 @@ class AnvioUtil:
 
         return report_output
 
-    def create_dict_from_depth_file(self, depth_file_path):
-        # keep contig order (required by metabat2)
-        depth_file_dict = {}
-        with open(depth_file_path, 'r') as f:
-            header = f.readline().rstrip().split("\t")
-            # print('HEADER1 {}'.format(header))
-            # map(str.strip, header)
-            for line in f:
-                # deal with cases were fastq name has spaces.Assume first
-                # non white space word is unique and use this as ID.
-                # line = line.rstrip()
-                vals = line.rstrip().split("\t")
-                if ' ' in vals[0]:
-                    ID = vals[0].split()[0]
-                else:
-                    ID = vals[0]
-                depth_file_dict[ID] = vals[1:]
-            depth_file_dict['header'] = header
-        return depth_file_dict
+    # def create_dict_from_depth_file(self, depth_file_path):
+    #     # keep contig order (required by metabat2)
+    #     depth_file_dict = {}
+    #     with open(depth_file_path, 'r') as f:
+    #         header = f.readline().rstrip().split("\t")
+    #         # print('HEADER1 {}'.format(header))
+    #         # map(str.strip, header)
+    #         for line in f:
+    #             # deal with cases were fastq name has spaces.Assume first
+    #             # non white space word is unique and use this as ID.
+    #             # line = line.rstrip()
+    #             vals = line.rstrip().split("\t")
+    #             if ' ' in vals[0]:
+    #                 ID = vals[0].split()[0]
+    #             else:
+    #                 ID = vals[0]
+    #             depth_file_dict[ID] = vals[1:]
+    #         depth_file_dict['header'] = header
+    #     return depth_file_dict
 
     def run_anvio(self, task_params):
         """
@@ -810,7 +882,11 @@ class AnvioUtil:
         contig_file = self._get_contig_file(task_params['assembly_ref'])
         task_params['contig_file_path'] = contig_file
 
-        # anvi-script-reformat-fasta
+        assembly_reformatted = self.run_anvi_script_reformat_fasta(task_params)
+        task_params['contig_file_path'] = assembly_reformatted
+
+        self.run_anvi_gen_contigs_database(task_params)
+
 
         # clean the assembly file so that there are no spaces in the fasta headers
         #assembly_clean = self.retrieve_and_clean_assembly(task_params)
@@ -822,7 +898,7 @@ class AnvioUtil:
         task_params['reads_list_file'] = reads_list_file
 
         # prep result directory
-        result_directory = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY)
+        result_directory = os.path.join(self.scratch, self.ANVIO_RESULT_DIRECTORY)
         self._mkdir_p(result_directory)
 
         cwd = os.getcwd()
@@ -848,8 +924,6 @@ class AnvioUtil:
         # this function has an internal loop to generate a sorted bam file for each input read file
         #
         # self.set_up_parallel_tasks(task_params)
-
-        self.generate_alignment_bams(task_params, assembly_clean)
 
         # not used right now
         # depth_file_path = self.generate_make_coverage_table_command(task_params, sorted_bam_file_list)
@@ -877,6 +951,10 @@ class AnvioUtil:
         #self.revert_fasta_headers(task_params)
 
         #self.make_binned_contig_summary_file_for_binning_apps(task_params)
+
+        self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
+
+        self.run_anvi_merge(task_params)
 
         # file handling and management
         os.chdir(cwd)

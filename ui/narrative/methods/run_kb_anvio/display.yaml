@@ -48,6 +48,16 @@ parameters :
         short-hint : minimum contig length (default 2500bp)
         long-hint  : minimum contig length must be less than 1000bp
 
+    contig_split_size :
+        ui-name : Contig Split Size (>=5000bp)
+        short-hint : contig split size (default 10000bp)
+        long-hint  : split contigs longer than this value into chunks this size during binning
+
+    kmer_size :
+        ui-name : Kmer Length
+        short-hint : kmer length (default 4)
+        long-hint  : kmer length (default 4)
+
 description : |
     <p>ANVIO clusters metagenomic contigs into different "bins", each of which should correspond to a putative genome.</p>
     <p>ANVIO uses nucleotide composition information and source strain abundance (measured by depth-of-coverage by aligning the reads to the contigs) to perform binning.</p>

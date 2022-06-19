@@ -147,66 +147,66 @@ class kb_anvioTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
-    def test_bad_run_anvio_params(self):
-        method_name = 'test_bad_run_anvio_params'
-        print ("\n=================================================================")
-        print ("RUNNING "+method_name+"()")
-        print ("=================================================================\n")
+    # def test_bad_run_anvio_params(self):
+    #     method_name = 'test_bad_run_anvio_params'
+    #     print ("\n=================================================================")
+    #     print ("RUNNING "+method_name+"()")
+    #     print ("=================================================================\n")
 
-        invalidate_input_params = {
-          'missing_assembly_ref': 'assembly_ref1',
-          'binned_contig_name': 'binned_contig_name',
-          'workspace_name': 'workspace_name',
-          'reads_list': 'reads_list',
-          'read_mapping_tool': 'read_mapping_tool'
-        }
-        with self.assertRaisesRegex(
-                    ValueError, '"assembly_ref" parameter is required, but missing'):
-            self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
+    #     invalidate_input_params = {
+    #       'missing_assembly_ref': 'assembly_ref1',
+    #       'binned_contig_name': 'binned_contig_name',
+    #       'workspace_name': 'workspace_name',
+    #       'reads_list': 'reads_list',
+    #       'read_mapping_tool': 'read_mapping_tool'
+    #     }
+    #     with self.assertRaisesRegex(
+    #                 ValueError, '"assembly_ref" parameter is required, but missing'):
+    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
 
-        invalidate_input_params = {
-          'assembly_ref': 'assembly_ref1',
-          'missing_binned_contig_name': 'binned_contig_name',
-          'workspace_name': 'workspace_name',
-          'reads_list': 'reads_list',
-          'read_mapping_tool': 'read_mapping_tool'
-        }
-        with self.assertRaisesRegex(
-                    ValueError, '"binned_contig_name" parameter is required, but missing'):
-            self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
+    #     invalidate_input_params = {
+    #       'assembly_ref': 'assembly_ref1',
+    #       'missing_binned_contig_name': 'binned_contig_name',
+    #       'workspace_name': 'workspace_name',
+    #       'reads_list': 'reads_list',
+    #       'read_mapping_tool': 'read_mapping_tool'
+    #     }
+    #     with self.assertRaisesRegex(
+    #                 ValueError, '"binned_contig_name" parameter is required, but missing'):
+    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
 
-        invalidate_input_params = {
-          'assembly_ref': 'assembly_ref1',
-          'binned_contig_name': 'binned_contig_name',
-          'missing_workspace_name': 'workspace_name',
-          'reads_list': 'reads_list',
-          'read_mapping_tool': 'read_mapping_tool'
-        }
-        with self.assertRaisesRegex(
-                    ValueError, '"workspace_name" parameter is required, but missing'):
-            self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
+    #     invalidate_input_params = {
+    #       'assembly_ref': 'assembly_ref1',
+    #       'binned_contig_name': 'binned_contig_name',
+    #       'missing_workspace_name': 'workspace_name',
+    #       'reads_list': 'reads_list',
+    #       'read_mapping_tool': 'read_mapping_tool'
+    #     }
+    #     with self.assertRaisesRegex(
+    #                 ValueError, '"workspace_name" parameter is required, but missing'):
+    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
 
-        invalidate_input_params = {
-          'assembly_ref': 'assembly_ref1',
-          'binned_contig_name': 'binned_contig_name',
-          'workspace_name': 'workspace_name',
-          'missing_reads_list': 'reads_list',
-          'read_mapping_tool': 'read_mapping_tool'
-        }
-        with self.assertRaisesRegex(
-                    ValueError, '"reads_list" parameter is required, but missing'):
-            self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
+    #     invalidate_input_params = {
+    #       'assembly_ref': 'assembly_ref1',
+    #       'binned_contig_name': 'binned_contig_name',
+    #       'workspace_name': 'workspace_name',
+    #       'missing_reads_list': 'reads_list',
+    #       'read_mapping_tool': 'read_mapping_tool'
+    #     }
+    #     with self.assertRaisesRegex(
+    #                 ValueError, '"reads_list" parameter is required, but missing'):
+    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
 
-        invalidate_input_params = {
-          'assembly_ref': 'assembly_ref1',
-          'binned_contig_name': 'binned_contig_name',
-          'workspace_name': 'workspace_name',
-          'reads_list': 'reads_list',
-          'missing_read_mapping_tool': 'read_mapping_tool'
-        }
-        with self.assertRaisesRegex(
-                    ValueError, '"read_mapping_tool" parameter is required, but missing'):
-            self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
+    #     invalidate_input_params = {
+    #       'assembly_ref': 'assembly_ref1',
+    #       'binned_contig_name': 'binned_contig_name',
+    #       'workspace_name': 'workspace_name',
+    #       'reads_list': 'reads_list',
+    #       'missing_read_mapping_tool': 'read_mapping_tool'
+    #     }
+    #     with self.assertRaisesRegex(
+    #                 ValueError, '"read_mapping_tool" parameter is required, but missing'):
+    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
 
 
     def test_run_anvio_multiple_read_input_test1(self):
@@ -220,17 +220,10 @@ class kb_anvioTest(unittest.TestCase):
                                              'assembly_ref': self.assembly_ref1,
                                              'read_mapping_tool': 'bbmap_default',
                                              'min_contig_length': 3000,
-                                             'contig_split_size': 10000,
-                                             'contig_split_overlap': 0,
+                                             'contig_split_size': 20000,
                                              'kmer_size': 4,
-                                             'max_clusters_for_vgmm': 400,
-                                             'max_iterations_for_vgmm': 500,
-                                             'total_percentage_pca': 90,
-                                             'no_cov_normalization': '--no_cov_normalization',
-                                             'no_total_coverage': '--no_total_coverage',
-                                             'binned_contig_name': 'anvio_bin_obj',
-                                            # 'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref] })
-                                             'reads_list': [self.int1_oldstyle_reads_ref] })
+                                             'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref] })
+                                            # 'reads_list': [self.int1_oldstyle_reads_ref] })
 
 
     # def test_run_anvio_bbmap_default(self):

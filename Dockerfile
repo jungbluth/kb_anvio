@@ -31,6 +31,10 @@ RUN wget https://github.com/lh3/minimap2/releases/download/v2.17/minimap2-2.17.t
 
 # RUN pip install nose jinja2 coverage
 
+RUN wget https://github.com/hyattpd/Prodigal/releases/download/v2.6.3/prodigal.linux && \
+    chmod +x prodigal.linux && \
+    mv prodigal.linux /usr/local/bin/prodigal
+
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
 RUN chmod -R a+rw /kb/module

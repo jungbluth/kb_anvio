@@ -17,11 +17,13 @@ module kb_anvio {
         required params:
         assembly_ref: Genome assembly object reference
         workspace_name: the name of the workspace it gets saved to.
-        reads_list: list of reads object (PairedEndLibrary/SingleEndLibrary) upon which ANVIO will be run
+        reads_list: list of reads object (PairedEndLibrary/SingleEndLibrary) upon which CONCOCT will be run
 
         optional params:
         min_contig_length: minimum contig length; default 1000bp
-        ref: https://github.com/merenlab/anvio
+        contig_split_size: length to split long contigs; default 10000bp
+        kmer_size: 
+        ref: https://github.com/BinPro/CONCOCT
 
     */
     typedef structure {
@@ -29,9 +31,11 @@ module kb_anvio {
         string workspace_name;
         list<obj_ref> reads_list;
 
+        int thread;
         string read_mapping_tool;
         int min_contig_length;
-
+        int contig_split_size;
+        int kmer_size;
 
     } AnvioInputParams;
 

@@ -98,6 +98,31 @@
               "min_int" : 1000,
               "validate_as" : "int"
             }
+        },
+        {
+            "id": "contig_split_size",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ 10000 ],
+            "field_type": "text",
+            "text_options": {
+                "min_int" : 5000,
+                "validate_as" : "int"
+            }
+        },
+        {
+          "id": "kmer_size",
+          "optional": true,
+          "advanced": true,
+          "allow_multiple": false,
+          "default_values": [ 4 ],
+          "field_type": "text",
+          "text_options": {
+              "min_int" : 2,
+              "max_int" : 6,
+              "validate_as" : "int"
+            }
         }
     ],
     "behavior": {
@@ -127,6 +152,14 @@
                 {
                     "input_parameter": "min_contig_length",
                     "target_property": "min_contig_length"
+                },
+                {
+                    "input_parameter": "contig_split_size",
+                    "target_property": "contig_split_size"
+                },
+                {
+                    "input_parameter": "kmer_size",
+                    "target_property": "kmer_size"
                 }
             ],
             "output_mapping": [
@@ -137,14 +170,6 @@
                 {
                     "service_method_output_path": [0, "result_directory"],
                     "target_property": "result_directory"
-                },
-                {
-                    "service_method_output_path": [0,"binned_contig_obj_ref"],
-                    "target_property": "binned_contig_obj_ref"
-                },
-                {
-                    "service_method_output_path": [0,"binned_contig_obj_ref"],
-                    "target_property": "objRef"
                 },
                 {
                     "service_method_output_path": [0, "report_name"],
