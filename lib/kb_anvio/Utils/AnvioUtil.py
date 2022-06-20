@@ -211,7 +211,7 @@ class AnvioUtil:
         clean_contig_file_path = task_params['contig_file_path'] + "_anvio-reformatted"
         command = 'anvi-gen-contigs-database '
         command += '-f {} '.format(contig_file_path)
-        command += '-o contigs.db '
+        command += '-o anvio_output_dir/contigs.db '
         command += '--split-length {} '.format(contig_split_size)
         command += '--kmer-size {} '.format(kmer_size)
         command += '-T 10 '
@@ -495,7 +495,7 @@ class AnvioUtil:
     def run_anvi_profile(self, raw_sorted_bam):
         command = 'anvi-profile '
         command += '-i {} '.format(raw_sorted_bam)
-        command += '-c contigs.db '
+        command += '-c anvio_output_dir/contigs.db '
         command += '-T 10 '
 
         log('running anvi-profile: {}'.format(command))
@@ -539,13 +539,17 @@ class AnvioUtil:
 
             self.run_anvi_profile(raw_sorted_bam)
 
+        if len(task_params['reads_list']) > 1:
+            self.run_anvi_merge(task_params)
+
+
         return sorted_bam_file_list
 
     def run_anvi_merge(self, task_params):
         command = 'anvi-merge '
         command += '*/PROFILE.db '
         command += '-o SAMPLES-MERGED '
-        command += '-c contigs.db '
+        command += '-c anvio_output_dir/contigs.db '
         command += '--enforce-hierarchical-clustering'
 
         log('running run_anvi_merge: {}'.format(command))
@@ -711,6 +715,79 @@ class AnvioUtil:
     #                                                      bbstats_output['gc_avg']))
     #     f.close()
     #     log('Finished make_binned_contig_summary_file_for_binning_apps function')
+
+    def run_anvi_run_hmms(self):
+        command = 'anvi-run-hmms '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        log('running anvi_run_hmms: {}'.format(command))
+        self._run_command(command)
+
+
+    def run_anvi_run_ncbi_cog(self):
+        command = 'anvi-run-ncbi-cogs '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--sensitive '
+        command += '--cog-data-dir /data/anviodb/COG'
+        log('running anvi_run_ncbi_cog: {}'.format(command))
+        self._run_command(command)
+
+    def run_anvi_run_pfams(self):
+        command = 'anvi-run-ncbi-cogs '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--pfam-data-dir /data/anviodb/Pfam'
+        log('running anvi_run_pfams: {}'.format(command))
+        self._run_command(command)
+
+    def run_anvi_run_kegg_kofams(self):
+        command = 'anvi-run-kegg-kofams '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--kegg-data-dir /data/anviodb/KEGG'
+        log('running anvi_run_kegg_kofams: {}'.format(command))
+        self._run_command(command)
+
+    def run_anvi_run_interacdome(self):
+        command = 'anvi-run-interacdome '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--interacdome-dataset representable '
+        command += '-m 0.200000 '
+        command += '-f 0.5 '
+        command += '--interacdome-data-dir /data/anviodb/Interacdome'
+        log('running anvi-run-interacdome: {}'.format(command))
+        self._run_command(command)
+
+    def run_anvi_run_scg_taxonomy(self):
+        command = 'anvi-run-scg-taxonomy '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '-P 1 '
+        command += '--max-num-target-sequences 20 '
+        command += '--min-percent-identity 90.0 '
+        log('running anvi-run-scg-taxonomy: {}'.format(command))
+        self._run_command(command)
+
+    def run_anvi_scan_trnas(self):
+        command = 'anvi-scan-trnas '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--trna-cutoff-score 20'
+        log('running anvi-scan-trnas: {}'.format(command))
+        self._run_command(command)
+
+    def run_anvi_run_trna_taxonomy(self):
+        command = 'anvi-run-trna-taxonomy '
+        command += '-c anvio_output_dir/contigs.db '
+        command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--min-percent-identity 90.0 '
+        command += '--max-num-target-sequences 100 '
+        command += '-P 1'
+        log('running anvi-run-trna-taxonomy: {}'.format(command))
+        self._run_command(command)
+
 
     def generate_output_file_list(self, result_directory):
         """
@@ -905,56 +982,16 @@ class AnvioUtil:
         log('changing working dir to {}'.format(result_directory))
         os.chdir(result_directory)
 
-        # anvi-run-hmms
-        # anvi-run-ncbi-cogs
-        # anvi-run-pfams
-        # anvi-run-kegg-kofams
-        # anvi-run-interacdome
-        # anvi-run-scg-taxonomy
-        # anvi-scan-trnas
-        # anvi-run-trna-taxonomy
-
-
-
-        # set up tasks for kbparallel to run alignments
-        # this also submits run_alignments function in parallel
-        # self.set_up_parallel_tasks(params)
-
-        # run alignments, and update input contigs to use the clean file
-        # this function has an internal loop to generate a sorted bam file for each input read file
-        #
-        # self.set_up_parallel_tasks(task_params)
-
-        # not used right now
-        # depth_file_path = self.generate_make_coverage_table_command(task_params, sorted_bam_file_list)
-        # depth_dict = self.create_dict_from_depth_file(depth_file_path)
-
-        # run anvio prep, cut up fasta input
-        #self.generate_anvio_cut_up_fasta_command(task_params)
-
-        # run anvio make coverage table from bam
-        #self.generate_anvio_coverage_table_from_bam(task_params)
-
-        # run anvio prep and anvio
-        #self.generate_anvio_command(task_params)
-
-        # run anvio post cluster merging command
-        #self.generate_anvio_post_clustering_merging_command(task_params)
-
-        # run extract bins command
-        #self.generate_anvio_extract_fasta_bins_command(task_params)
-
-        # run fasta renaming
-        #self.rename_and_standardize_bin_names(task_params)
-
-        # revert fasta headers in bins
-        #self.revert_fasta_headers(task_params)
-
-        #self.make_binned_contig_summary_file_for_binning_apps(task_params)
+        #self.run_anvi_run_hmms()
+        #self.run_anvi_run_ncbi_cog()
+        #self.run_anvi_run_pfams()
+        #self.run_anvi_run_kegg_kofams()
+        #self.run_anvi_run_interacdome()
+        self.run_anvi_run_scg_taxonomy()
+        #self.run_anvi_scan_trnas()
+        #self.run_anvi_run_trna_taxonomy()
 
         self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
-
-        self.run_anvi_merge(task_params)
 
         # file handling and management
         os.chdir(cwd)
