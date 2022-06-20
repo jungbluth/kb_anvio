@@ -19,8 +19,10 @@ elif [ "${1}" = "init" ] ; then
   echo "Initialize module"
   #mkdir -p /data/anviodb
   #cd /data/anviodb
+  
   #echo "Running anvi-setup-scg-taxonomy"
   #anvi-setup-scg-taxonomy -T 1
+
   #echo "Running anvi-setup-ncbi-cogs" # need BLAST tools
   #anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
   #echo "Running anvi-setup-pfams" 

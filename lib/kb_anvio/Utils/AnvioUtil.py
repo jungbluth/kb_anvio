@@ -983,7 +983,7 @@ class AnvioUtil:
         task_params['read_type'] = read_type
         task_params['reads_list_file'] = reads_list_file
 
-        #self.run_anvi_run_hmms()
+        self.run_anvi_run_hmms()
         #self.run_anvi_run_ncbi_cog()
         #self.run_anvi_run_pfams()
         #self.run_anvi_run_kegg_kofams()
