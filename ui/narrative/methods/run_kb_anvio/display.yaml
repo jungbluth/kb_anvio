@@ -1,9 +1,9 @@
 #
 # define display information
 #
-name     : Bin Contigs using ANVIO - v1.1
-subtitle : Group assembled metagenomic contigs into lineages (Bins) using depth-of-coverage and nucleotide composition
-tooltip  : Group metagenomic contigs into genome bins using depth-of-coverage and nucleotide composition
+name     : Generate contigs database and reads profiles for Anvi'o - v7.1
+subtitle : Generate contigs database and reads profiles for Anvi'o 
+tooltip  : Generate contigs database and reads profiles for Anvi'o
 
 icon: anvio.png
 
@@ -50,8 +50,8 @@ parameters :
 
     contig_split_size :
         ui-name : Contig Split Size (>=5000bp)
-        short-hint : contig split size (default 10000bp)
-        long-hint  : split contigs longer than this value into chunks this size during binning
+        short-hint : contig split size (default 20000bp)
+        long-hint  : split contigs longer than this value into chunks for processing
 
     kmer_size :
         ui-name : Kmer Length

@@ -211,7 +211,7 @@ class AnvioUtil:
         clean_contig_file_path = task_params['contig_file_path'] + "_anvio-reformatted"
         command = 'anvi-gen-contigs-database '
         command += '-f {} '.format(contig_file_path)
-        command += '-o anvio_output_dir/contigs.db '
+        command += '-o contigs.db '
         command += '--split-length {} '.format(contig_split_size)
         command += '--kmer-size {} '.format(kmer_size)
         command += '-T 10 '
@@ -495,7 +495,7 @@ class AnvioUtil:
     def run_anvi_profile(self, raw_sorted_bam):
         command = 'anvi-profile '
         command += '-i {} '.format(raw_sorted_bam)
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '-T 10 '
 
         log('running anvi-profile: {}'.format(command))
@@ -549,7 +549,7 @@ class AnvioUtil:
         command = 'anvi-merge '
         command += '*/PROFILE.db '
         command += '-o SAMPLES-MERGED '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--enforce-hierarchical-clustering'
 
         log('running run_anvi_merge: {}'.format(command))
@@ -718,7 +718,7 @@ class AnvioUtil:
 
     def run_anvi_run_hmms(self):
         command = 'anvi-run-hmms '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         log('running anvi_run_hmms: {}'.format(command))
         self._run_command(command)
@@ -726,7 +726,7 @@ class AnvioUtil:
 
     def run_anvi_run_ncbi_cog(self):
         command = 'anvi-run-ncbi-cogs '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--sensitive '
         command += '--cog-data-dir /data/anviodb/COG'
@@ -735,7 +735,7 @@ class AnvioUtil:
 
     def run_anvi_run_pfams(self):
         command = 'anvi-run-ncbi-cogs '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--pfam-data-dir /data/anviodb/Pfam'
         log('running anvi_run_pfams: {}'.format(command))
@@ -743,7 +743,7 @@ class AnvioUtil:
 
     def run_anvi_run_kegg_kofams(self):
         command = 'anvi-run-kegg-kofams '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--kegg-data-dir /data/anviodb/KEGG'
         log('running anvi_run_kegg_kofams: {}'.format(command))
@@ -751,7 +751,7 @@ class AnvioUtil:
 
     def run_anvi_run_interacdome(self):
         command = 'anvi-run-interacdome '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--interacdome-dataset representable '
         command += '-m 0.200000 '
@@ -761,8 +761,9 @@ class AnvioUtil:
         self._run_command(command)
 
     def run_anvi_run_scg_taxonomy(self):
-        command = 'anvi-run-scg-taxonomy '
-        command += '-c anvio_output_dir/contigs.db '
+        command = 'anvi-setup-scg-taxonomy -T 1 && '
+        command += 'anvi-run-scg-taxonomy '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '-P 1 '
         command += '--max-num-target-sequences 20 '
@@ -772,7 +773,7 @@ class AnvioUtil:
 
     def run_anvi_scan_trnas(self):
         command = 'anvi-scan-trnas '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--trna-cutoff-score 20'
         log('running anvi-scan-trnas: {}'.format(command))
@@ -780,7 +781,7 @@ class AnvioUtil:
 
     def run_anvi_run_trna_taxonomy(self):
         command = 'anvi-run-trna-taxonomy '
-        command += '-c anvio_output_dir/contigs.db '
+        command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--min-percent-identity 90.0 '
         command += '--max-num-target-sequences 100 '
@@ -959,6 +960,14 @@ class AnvioUtil:
         contig_file = self._get_contig_file(task_params['assembly_ref'])
         task_params['contig_file_path'] = contig_file
 
+        # prep result directory
+        result_directory = os.path.join(self.scratch, self.ANVIO_RESULT_DIRECTORY)
+        self._mkdir_p(result_directory)
+
+        cwd = os.getcwd()
+        log('changing working dir to {}'.format(result_directory))
+        os.chdir(result_directory)
+
         assembly_reformatted = self.run_anvi_script_reformat_fasta(task_params)
         task_params['contig_file_path'] = assembly_reformatted
 
@@ -973,14 +982,6 @@ class AnvioUtil:
         (reads_list_file, read_type) = self.stage_reads_list_file(task_params['reads_list'])
         task_params['read_type'] = read_type
         task_params['reads_list_file'] = reads_list_file
-
-        # prep result directory
-        result_directory = os.path.join(self.scratch, self.ANVIO_RESULT_DIRECTORY)
-        self._mkdir_p(result_directory)
-
-        cwd = os.getcwd()
-        log('changing working dir to {}'.format(result_directory))
-        os.chdir(result_directory)
 
         #self.run_anvi_run_hmms()
         #self.run_anvi_run_ncbi_cog()
