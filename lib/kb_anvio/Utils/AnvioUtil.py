@@ -803,9 +803,7 @@ class AnvioUtil:
         self._mkdir_p(output_directory)
         result_file = os.path.join(output_directory, 'anvio_result.zip')
 
-        with zipfile.ZipFile(result_file, 'w',
-                             zipfile.ZIP_DEFLATED,
-                             allowZip64=True) as zip_file:
+        with zipfile.ZipFile(result_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True) as zip_file:
 
             for dirname, subdirs, files in os.walk(result_directory):
                 for file in files:
@@ -894,7 +892,7 @@ class AnvioUtil:
             shutil.move(os.path.join(self.scratch, "SAMPLES-MERGED"), os.path.join(self.scratch, "anvio_output_dir"))
         else:
             if len(glob.glob('*_RAW')) == 1:
-                shutil.move(os.path.join(self.scratch, glob.glob('*_RAW')[0]), os.path.join(self.scratch, "anvio_output_dir"))
+                shutil.copytree(os.path.join(self.scratch, glob.glob('*_RAW')[0]), os.path.join(self.scratch, "anvio_output_dir"))
             else:
                 log("Hmm, there should only be one folder with _RAW in suffix.")
 
