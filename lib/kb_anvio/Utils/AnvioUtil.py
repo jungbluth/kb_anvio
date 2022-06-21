@@ -7,6 +7,8 @@ import time
 import uuid
 import zipfile
 import copy
+import glob
+import shutil
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.DataFileUtilClient import DataFileUtil
@@ -807,13 +809,13 @@ class AnvioUtil:
 
             for dirname, subdirs, files in os.walk(result_directory):
                 for file in files:
-                    if (file.endswith('.sam') or
-                        file.endswith('.bam') or
-                        file.endswith('.bai') or
-                       file.endswith('.summary')):
-                            continue
-                    if (dirname.endswith(self.BINNER_BIN_RESULT_DIR)):
-                            continue
+                    # if (file.endswith('.sam') or
+                    #     file.endswith('.bam') or
+                    #     file.endswith('.bai') or
+                    #    file.endswith('.summary')):
+                    #         continue
+                    # if (dirname.endswith(self.BINNER_BIN_RESULT_DIR)):
+                    #         continue
                     zip_file.write(os.path.join(dirname, file), file)
                 if (dirname.endswith(self.BINNER_BIN_RESULT_DIR)):
                     baseDir = os.path.basename(dirname)
@@ -885,6 +887,17 @@ class AnvioUtil:
 
     #     return (binned_contig_count, input_contig_count, total_bins_count)
 
+    def move_files_to_output_folder(self, task_params):
+        shutil.move("contigs.db", "anvio_output_dir")
+
+        if len(task_params['reads_list']) > 1:
+            shutil.move("SAMPLES-MERGED", "anvio_output_dir")
+        else:
+            if len(glob.glob('*_RAW')) == 1:
+                shutil.move(glob.glob('*_RAW')[0], "anvio_output_dir")
+            else:
+                log("Hmm, there should only be one folder with _RAW in suffix.")
+
     def generate_report(self, task_params):
         """
         generate_report: generate summary report
@@ -894,6 +907,8 @@ class AnvioUtil:
         result_directory = os.path.join(self.scratch, "anvio_output_dir")
 
         task_params['result_directory'] = result_directory
+
+        self.move_files_to_output_folder(task_params)
 
         output_files = self.generate_output_file_list(task_params['result_directory'])
 
@@ -983,12 +998,12 @@ class AnvioUtil:
         task_params['read_type'] = read_type
         task_params['reads_list_file'] = reads_list_file
 
-        self.run_anvi_run_hmms()
+        #self.run_anvi_run_hmms()
         #self.run_anvi_run_ncbi_cog()
         #self.run_anvi_run_pfams()
         #self.run_anvi_run_kegg_kofams()
         #self.run_anvi_run_interacdome()
-        self.run_anvi_run_scg_taxonomy()
+        #self.run_anvi_run_scg_taxonomy()
         #self.run_anvi_scan_trnas()
         #self.run_anvi_run_trna_taxonomy()
 

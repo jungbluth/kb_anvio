@@ -5,7 +5,7 @@ name     : Generate contigs database and reads profiles for Anvi'o - v7.1
 subtitle : Generate contigs database and reads profiles for Anvi'o 
 tooltip  : Generate contigs database and reads profiles for Anvi'o
 
-icon: anvio_v7.png
+icon: anvio.png
 
 screenshots: []
 
@@ -59,34 +59,43 @@ parameters :
         long-hint  : kmer length (default 4)
 
 description : |
-    <p>ANVIO clusters metagenomic contigs into different "bins", each of which should correspond to a putative genome.</p>
-    <p>ANVIO uses nucleotide composition information and source strain abundance (measured by depth-of-coverage by aligning the reads to the contigs) to perform binning.</p>
-    <p>ANVIO takes a metagenome assembly and the reads that produced the assembly and organizes the contigs into putative genomes, called "bins". ANVIO uses nucleotide composition information and depth of coverage information to perform binning. </p>
+    <p>Anvi'o is an open-source, community-driven analysis and visualization platform for microbial 'omics.</p>
+    <p>Anvi'o is a platform that enables multiple forms of microbiological research, inlcuding, genomics, metagenomics, metatranscriptomics, pangenomics, metapangenomics, phylogenomics, and microbial population genetics.</p>
+    <p>Anvi'o integrates multiple input analysis products into a single interactive visualization tool. </p>
     <p><hr></p>
     <p><b>Configuration:</b></p>
-    <p><b><i>Assembly Object:</i></b> The Assembly object is a collection of assembled genome fragments, called "contigs".  These are the items that ANVIO will bin.  Currently only a single Metagenome Assembly object is accepted by the ANVIO App.</p>
-    <p><b><i>Input BinnedContig Object Name:</i></b> The BinnedContig Object represents the directory of binned contigs created by ANVIO. This object can be used for downstream analysis</p>
-    <p><b><i>Read Library Object:</i></b> The read libraries are aligned to the assembly using a selected read mapper, and provide the abundance information for each contig that roughly follows the species abundance.</p>
-    <p><b><i>Minimum Contig Length:</i></b> Contigs that are too short may slow down analysis and not give statistically meaningful nucleotide composition profiles.  A value of 2500 bp is a reasonable cutoff, but as low as 1000 bp can be used.</p>
+    <p><b><i>Assembly Object:</i></b> The Assembly object is a collection of assembled genome fragments, called "contigs".  Currently only a single Assembly Object is accepted by the Anvi'o App.</p>
+    <p><b><i>Read Library Object(s):</i></b> The read libraries are aligned to the assembly using a selected read mapper.</p>
+    <p><b><i>Minimum Contig Length:</i></b> Contigs that are too short may slow down analysis.  A value of 2500 bp is a reasonable cutoff, but as low as 1000 bp can be used.</p>
     <p><b><i>Contig Split Size:</i></b> Contigs are split before clustering to minimize the bias imposed by very large contigs. A value of 5000-10000 bp is a reasonable cutoff.</p>
-    <p><b><i>Contig Split Overlap:</i></b> Contigs split before clustering can have varying degrees of overlap.  A value of 0 is most often used.</p>
     <p><b><i>Kmer Length:</i></b> Size of the kmers used during profiling.  A default value of 4 is reasonable to start with. Note: adjusting the kmer length will impact speed.</p>
     <p><hr></p>
     <p><b>Output:</b></p>
-    <p><b><i>Output BinnedContig Object Name:</i></b>The BinnedContig Object represents the directory of binned contigs created by ANVIO. This object can be used for downstream analysis.</p>
-    <p><b><i>Output Bin Summary Report:</i></b>The number of bins produced, the number of contigs that were binned and the total number of contigs in the assembly.</p>
-    <p><b><i>Downloadable files:</i></b> The enitre output of the ANVIO run may be downloaded as a zip file. This zip file also contains a table of read-depth coverage per contig ("*.depth.txt")</p>
+    <p><b><i>Output Summary Report:</i></b>Overview of the Anvi'o generated database.</p>
+    <p><b><i>Downloadable files:</i></b> The key Anvi'o output files - contigs.db and associate reads profile files may be downloaded as a zip file.</p>
     <p><hr></p>
     <p><i>Implemented for KBase by <a href="mailto:sjungbluth@lbl.gov">Sean Jungbluth(sjungbluth@lbl.gov)</a></i></p>
 
 publications:
     -
-        pmid : 25218180
+        pmid : 33349678
         display-text : |
-            Alneberg J, Bjarnason BS, de Bruijn I, Schirmer M, Quick J, Ijaz UZ, Lahti L, Loman NJ, Andersson AF, Quince C. Binning metagenomic contigs by coverage and composition. Nature Methods. 2014;11: 1144-1146. doi:10.1038/nmeth.3103
-        link: https://doi.org/10.1038/nmeth.3103
+            Eren AM, Kiefl E, Shaiber A, Veseli I, Miller SE, Schechter MS, Fink I, Pan JN, Yousef M, Fogarty EC, Trigodet F, Watson AR, Esen ÖC, Moore RM, Clayssen Q, Lee MD, Kivenson V, Graham ED, Merrill BD, Karkman A, Blankenberg D, Eppley JM, Sjödin A, Scott JJ, Vázquez-Campos X, McKay LJ, McDaniel EA, Stevens SLR, Anderson RE, Fuessel J, Fernandez-Guerra A, Maignien L, Delmont TO, Willis AD. Community-led, integrated, reproducible multi-omics with Anvi'o. Nature Microbiology. 2020;6: 3-6. doi:10.1038/s41564-020-00834-3
+        link: https://doi.org/10.1038/s41564-020-00834-3
+
+    -
+        pmid : 26500826
+        display-text : |
+            Eren AM, Esen ÖC, Quince C, Vineis JH, Morrison HG, Sogin ML, Delmont TO. Anvi’o: an advanced analysis and visualization platform for ‘omics data. PeerJ. 3;e1319. doi:10.7717/peerj.1319
+
+        link: https://doi.org/10.7717/peerj.1319
 
     -
         display-text : |
-            ANVIO source:
-        link: https://github.com/BinPro/ANVIO
+            Anvi'o website:
+        link: https://anvio.org/
+
+    -
+        display-text : |
+            Anvi'o github:
+        link: https://github.com/merenlab/anvio

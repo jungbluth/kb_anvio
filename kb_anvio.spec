@@ -23,7 +23,7 @@ module kb_anvio {
         min_contig_length: minimum contig length; default 1000bp
         contig_split_size: length to split long contigs; default 10000bp
         kmer_size: 
-        ref: https://github.com/BinPro/CONCOCT
+        ref: https://github.com/merenlab/anvio
 
     */
     typedef structure {
