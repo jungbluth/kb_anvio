@@ -25,11 +25,11 @@ elif [ "${1}" = "init" ] ; then
   # anvi-setup-scg-taxonomy -T 1
 
   echo "Running anvi-setup-ncbi-cogs" # need BLAST tools
-  anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
+  anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG &> /dev/null
   # echo "Running anvi-setup-pfams" 
   # anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
   echo "Running anvi-setup-kegg-kofams" # yaml update
-  anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
+  anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG &> /dev/null
   # echo "anvi-setup-interacdome"
   # anvi-setup-interacdome --interacdome-data-dir /data/anviodb/Interacdome
   # echo "anvi-setup-pdb-database"
