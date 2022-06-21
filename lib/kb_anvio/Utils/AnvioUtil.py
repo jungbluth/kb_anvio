@@ -888,13 +888,13 @@ class AnvioUtil:
     #     return (binned_contig_count, input_contig_count, total_bins_count)
 
     def move_files_to_output_folder(self, task_params):
-        shutil.move("contigs.db", "anvio_output_dir")
+        shutil.move(os.path.join(self.scratch, "contigs.db"), os.path.join(self.scratch, "anvio_output_dir"))
 
         if len(task_params['reads_list']) > 1:
-            shutil.move("SAMPLES-MERGED", "anvio_output_dir")
+            shutil.move(os.path.join(self.scratch, "SAMPLES-MERGED"), os.path.join(self.scratch, "anvio_output_dir"))
         else:
             if len(glob.glob('*_RAW')) == 1:
-                shutil.move(glob.glob('*_RAW')[0], "anvio_output_dir")
+                shutil.move(os.path.join(self.scratch, glob.glob('*_RAW')[0]), os.path.join(self.scratch, "anvio_output_dir"))
             else:
                 log("Hmm, there should only be one folder with _RAW in suffix.")
 
@@ -998,7 +998,7 @@ class AnvioUtil:
         task_params['read_type'] = read_type
         task_params['reads_list_file'] = reads_list_file
 
-        #self.run_anvi_run_hmms()
+        self.run_anvi_run_hmms()
         #self.run_anvi_run_ncbi_cog()
         #self.run_anvi_run_pfams()
         #self.run_anvi_run_kegg_kofams()

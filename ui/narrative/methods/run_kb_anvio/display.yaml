@@ -5,7 +5,7 @@ name     : Generate contigs database and reads profiles for Anvi'o - v7.1
 subtitle : Generate contigs database and reads profiles for Anvi'o 
 tooltip  : Generate contigs database and reads profiles for Anvi'o
 
-icon: anvio.png
+icon: anvio_merged.png
 
 screenshots: []
 
