@@ -17,8 +17,8 @@ elif [ "${1}" = "async" ] ; then
   sh ./scripts/run_async.sh
 elif [ "${1}" = "init" ] ; then
   echo "Initialize module"
-  # mkdir -p /data/anviodb
-  # cd /data/anviodb
+  mkdir -p /data/anviodb
+  cd /data/anviodb
 
   # Ideally would download this here but then Anvio can't find the database later, so right now running in AnvioUtil
   # echo "Running anvi-setup-scg-taxonomy"
@@ -34,7 +34,7 @@ elif [ "${1}" = "init" ] ; then
   # anvi-setup-interacdome --interacdome-data-dir /data/anviodb/Interacdome
   # echo "anvi-setup-pdb-database"
   # anvi-setup-pdb-database -T 1 --pdb-database-path /data/anviodb/PDB.db
-  # cd /data/anviodb
+  cd /data/anviodb
   if [ -d "/data/anviodb/COG/COG20" -a -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" -a -s "/data/anviodb/KEGG/MODULES.db" -a -s "/data/anviodb/KEGG/HMMs/Kofam.hmm" ] ; then
     echo "DATA DOWNLOADED SUCCESSFULLY"
     touch /data/__READY__
