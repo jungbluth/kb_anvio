@@ -1007,7 +1007,7 @@ class AnvioUtil:
         #self.run_anvi_scan_trnas()
         #self.run_anvi_run_trna_taxonomy()
 
-        #self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
+        self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
 
         # file handling and management
         os.chdir(cwd)
