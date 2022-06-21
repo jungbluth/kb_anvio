@@ -13,3 +13,5 @@ module-version:
 owners:
     [seanjungbluth]
 
+data-version:
+    1.0
