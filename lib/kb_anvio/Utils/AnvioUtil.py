@@ -891,11 +891,9 @@ class AnvioUtil:
         if len(task_params['reads_list']) > 1:
             shutil.move(os.path.join(self.scratch, "SAMPLES-MERGED"), os.path.join(self.scratch, "anvio_output_dir"))
         else:
-            if len(glob.glob('*_RAW')) == 1:
-                shutil.copytree(os.path.join(self.scratch, glob.glob('*_RAW')[0]), os.path.join(self.scratch, "anvio_output_dir"))
-            else:
-                log("Hmm, there should only be one folder with _RAW in suffix.")
-
+            #if len(glob.glob('*_RAW')) == 1:
+            shutil.move(os.path.join(self.scratch, glob.glob('*_RAW')[0]), os.path.join(self.scratch, "anvio_output_dir"))
+            
     def generate_report(self, task_params):
         """
         generate_report: generate summary report

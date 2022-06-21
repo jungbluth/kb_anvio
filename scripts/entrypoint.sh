@@ -23,7 +23,7 @@ elif [ "${1}" = "init" ] ; then
   # Ideally would download this here but then Anvio can't find the database later, so right now running in AnvioUtil
   # echo "Running anvi-setup-scg-taxonomy"
   # anvi-setup-scg-taxonomy -T 1
-
+  export COLUMNS=80
   echo "Running anvi-setup-ncbi-cogs" # need BLAST tools
   anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
   # echo "Running anvi-setup-pfams" 
