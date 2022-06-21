@@ -23,13 +23,13 @@ elif [ "${1}" = "init" ] ; then
   # Ideally would download this here but then Anvio can't find the database later, so right now running in AnvioUtil
   # echo "Running anvi-setup-scg-taxonomy"
   # anvi-setup-scg-taxonomy -T 1
-  export COLUMNS=80
+  
   echo "Running anvi-setup-ncbi-cogs" # need BLAST tools
-  anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
+  COLUMNS=80 anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
   # echo "Running anvi-setup-pfams" 
   # anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
   echo "Running anvi-setup-kegg-kofams" # yaml update
-  anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
+  COLUMNS=80 anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
   # echo "anvi-setup-interacdome"
   # anvi-setup-interacdome --interacdome-data-dir /data/anviodb/Interacdome
   # echo "anvi-setup-pdb-database"
