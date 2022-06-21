@@ -70,6 +70,8 @@ ENV PATH=/kb/module/SPAdes-3.15.4-Linux/bin:$PATH
 # ENV PATH=/kb/module/lib/kb_anvio/bin/hisat2-2.1.0/:$PATH
 # ENV PATH=/kb/deployment/bin/ANVIO/bin:/kb/deployment/bin/ANVIO/scripts:$PATH
 
+ENV COLUMNS=60 
+
 RUN make all
 
 ENTRYPOINT [ "./scripts/entrypoint.sh" ]
