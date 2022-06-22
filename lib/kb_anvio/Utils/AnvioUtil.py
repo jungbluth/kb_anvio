@@ -887,11 +887,13 @@ class AnvioUtil:
 
     def move_files_to_output_folder(self, task_params):
         shutil.move(os.path.join(self.scratch, "contigs.db"), os.path.join(self.scratch, "anvio_output_dir"))
-
+        shutil.move(os.path.join(self.scratch, task_params['contig_file_path']), os.path.join(self.scratch, "anvio_output_dir"))
         if len(task_params['reads_list']) > 1:
             shutil.move(os.path.join(self.scratch, "SAMPLES-MERGED"), os.path.join(self.scratch, "anvio_output_dir"))
         else:
             shutil.move(glob.glob(os.path.join(self.scratch,'*_RAW'))[0], os.path.join(self.scratch, "anvio_output_dir"))
+
+
 
     def generate_report(self, task_params):
         """
