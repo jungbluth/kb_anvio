@@ -58,6 +58,11 @@ RUN wget https://github.com/ablab/spades/releases/download/v3.15.4/SPAdes-3.15.4
 
 #RUN apt-get -y install xvfb python-qt4
 
+ENV COLUMNS="`tput cols`"
+RUN echo $COLUMNS
+ENV LINES="`tput lines`"
+RUN echo $LINES
+
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
 RUN chmod -R a+rw /kb/module
