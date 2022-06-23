@@ -56,7 +56,7 @@ RUN wget https://github.com/voutcn/megahit/releases/download/v1.2.9/MEGAHIT-1.2.
 RUN wget https://github.com/ablab/spades/releases/download/v3.15.4/SPAdes-3.15.4-Linux.tar.gz && \
     tar -xvzf SPAdes-3.15.4-Linux.tar.gz
 
-RUN apt-get -y install xvfb python-qt4
+#RUN apt-get -y install xvfb python-qt4
 
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work

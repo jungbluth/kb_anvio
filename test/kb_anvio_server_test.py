@@ -218,7 +218,7 @@ class kb_anvioTest(unittest.TestCase):
         ret = self.getImpl().run_kb_anvio(self.getContext(),
                                             {'workspace_name': self.getWsName(),
                                              'assembly_ref': self.assembly_ref1,
-                                             'read_mapping_tool': 'bbmap_default',
+                                             'read_mapping_tool': 'bowtie2_default',
                                              'min_contig_length': 3000,
                                              'contig_split_size': 20000,
                                              'kmer_size': 4,
