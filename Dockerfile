@@ -58,10 +58,7 @@ RUN wget https://github.com/ablab/spades/releases/download/v3.15.4/SPAdes-3.15.4
 
 #RUN apt-get -y install xvfb python-qt4
 
-ENV COLUMNS="`tput cols`"
-RUN echo $COLUMNS
-ENV LINES="`tput lines`"
-RUN echo $LINES
+RUN sed -i 's/wrap_width .*/wrap_width = 40/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
 
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
