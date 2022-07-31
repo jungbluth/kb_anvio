@@ -56,7 +56,7 @@ RUN wget https://github.com/voutcn/megahit/releases/download/v1.2.9/MEGAHIT-1.2.
 RUN wget https://github.com/ablab/spades/releases/download/v3.15.4/SPAdes-3.15.4-Linux.tar.gz && \
     tar -xvzf SPAdes-3.15.4-Linux.tar.gz
 
-RUN sed -i 's/wrap_width .*/wrap_width = 40/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
+RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
 
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
