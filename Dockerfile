@@ -69,6 +69,7 @@ ENV PATH=/kb/module/lib/kb_anvio/bin/bbmap:$PATH
 ENV PATH=/kb/module/lib/kb_anvio/bin/minimap2-2.17/:$PATH
 ENV PATH=/kb/module/lib/kb_anvio/bin/ncbi-blast-2.13.0+/bin:$PATH
 ENV PATH=/kb/module/lib/kb_anvio/bin/SPAdes-3.15.4-Linux/bin:$PATH
+ENV PATH=/kb/module/lib/kb_anvio/bin/hisat2-2.1.0:$PATH
 
 RUN make all
 
