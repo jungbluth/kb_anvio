@@ -722,6 +722,7 @@ class AnvioUtil:
         command = 'anvi-run-hmms '
         command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
+        command += '--quiet '.format(self.MAPPING_THREADS)
         log('running anvi_run_hmms: {}'.format(command))
         self._run_command(command)
 
