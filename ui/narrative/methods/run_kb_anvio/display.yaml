@@ -35,8 +35,8 @@ parameters :
 
     reads_list :
         ui-name : Reads
-        short-hint : A list of reads object (PairedEndLibrary/SingleEndLibrary) upon which ANVIO will be run
-        long-hint  : A list of reads object (PairedEndLibrary/SingleEndLibrary) upon which ANVIO will be run
+        short-hint : A list of reads object (PairedEndLibrary/SingleEndLibrary) upon which Anvi'o will be run
+        long-hint  : A list of reads object (PairedEndLibrary/SingleEndLibrary) upon which Anvi'o will be run
 
     read_mapping_tool :
         ui-name : Read Mapping Tool

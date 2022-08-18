@@ -4,9 +4,13 @@
 ToDo
 -----
 * Better tests for db installs
-* Threads tuned to a variable
+* Threads turned to a variable
+* Interactome and others as modules
 * Better install to correct wrong pandas version
 * Install more missing software from list here: https://anvio.org/install/
+* List database versions in documentation
+* Add anvi-estimate-metabolism
+* Look at anvi_script_run_eggnog_mapper
 
 0.0.1
 -----

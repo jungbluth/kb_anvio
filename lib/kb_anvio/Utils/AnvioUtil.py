@@ -17,9 +17,6 @@ from installed_clients.MetagenomeUtilsClient import MetagenomeUtils
 from installed_clients.ReadsUtilsClient import ReadsUtils
 # from installed_clients.KBParallelClient import KBParallel
 
-
-from .fasta import HeaderRenaming
-
 from random import seed
 from random import randint
 # seed random number generator
@@ -48,7 +45,6 @@ class AnvioUtil:
         self.ru = ReadsUtils(self.callback_url)
         self.au = AssemblyUtil(self.callback_url)
         self.mgu = MetagenomeUtils(self.callback_url)
-        self.fhr = HeaderRenaming()
         # self.parallel_runner = KBParallel(self.callback_url)
 
     # def set_up_parallel_tasks(self, task_params):
@@ -997,10 +993,10 @@ class AnvioUtil:
         task_params['reads_list_file'] = reads_list_file
 
         self.run_anvi_run_hmms()
-        #self.run_anvi_run_ncbi_cog()
-        #self.run_anvi_run_pfams()
-        #self.run_anvi_run_kegg_kofams()
-        #self.run_anvi_run_interacdome()
+        self.run_anvi_run_ncbi_cog()
+        self.run_anvi_run_pfams()
+        self.run_anvi_run_kegg_kofams()
+        self.run_anvi_run_interacdome()
         #self.run_anvi_run_scg_taxonomy()
         #self.run_anvi_scan_trnas()
         #self.run_anvi_run_trna_taxonomy()

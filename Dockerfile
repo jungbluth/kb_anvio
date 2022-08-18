@@ -7,7 +7,7 @@ MAINTAINER Sean Jungbluth <sjungbluth@lbl.gov>
 # installation scripts.
 
 # To install all the dependencies
-RUN apt-get update && apt-get install -y libgsl0-dev samtools git zip unzip bedtools bowtie2 wget python-pip libjpeg-dev zlib1g-dev libbz2-dev python3-pandas sqlite3 mcl bowtie2 bwa
+RUN apt-get update && apt-get install -y libgsl0-dev samtools git zip unzip bedtools bowtie2 wget python-pip libjpeg-dev zlib1g-dev libbz2-dev python3-pandas sqlite3 mcl bowtie2 bwa autoconf
 
 # https://github.com/merenlab/anvio/issues/1637
 RUN wget https://github.com/merenlab/anvio/releases/download/v7.1/anvio-7.1.tar.gz && \
@@ -55,6 +55,18 @@ RUN wget https://github.com/voutcn/megahit/releases/download/v1.2.9/MEGAHIT-1.2.
 
 RUN wget https://github.com/ablab/spades/releases/download/v3.15.4/SPAdes-3.15.4-Linux.tar.gz && \
     tar -xvzf SPAdes-3.15.4-Linux.tar.gz
+
+RUN wget http://trna.ucsc.edu/software/trnascan-se-2.0.9.tar.gz && \
+    tar -xvzf trnascan-se-2.0.9.tar.gz && \
+    cd tRNAscan-SE-2.0 && \
+    ./configure && \
+    make && \
+    make install
+
+RUN wget http://eddylab.org/infernal/infernal-1.1.4-linux-intel-gcc.tar.gz && \
+    tar -xvzf infernal-1.1.4-linux-intel-gcc.tar.gz && \
+    cp /kb/module/lib/kb_anvio/bin/infernal-1.1.4-linux-intel-gcc/binaries/cmsearch /usr/local/bin/cmsearch && \
+    cp /kb/module/lib/kb_anvio/bin/infernal-1.1.4-linux-intel-gcc/binaries/cmscan /usr/local/bin/cmscan
 
 RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
 

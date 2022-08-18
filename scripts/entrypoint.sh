@@ -20,23 +20,27 @@ elif [ "${1}" = "init" ] ; then
   mkdir -p /data/anviodb
   cd /data/anviodb
 
-  # Ideally would download this here but then Anvio can't find the database later, so right now running in AnvioUtil
+  # Ideally would download this here but then Anvio can't find the database later, so right now also running in AnvioUtil
   # echo "Running anvi-setup-scg-taxonomy"
-  # anvi-setup-scg-taxonomy -T 1
-  
+  # anvi-setup-scg-taxonomy -T 4 --scgs-taxonomy-data-dir /data/anviodb/scgs # data-dir location ignored
+  # echo "anvi-setup-trna-taxonomy"
+  # anvi-setup-trna-taxonomy -T 4 --trna-taxonomy-data-dir /data/anviodb/tRNA # data-dir location ignored
+
   echo "Running anvi-setup-ncbi-cogs"
   anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
-  #echo "Running anvi-setup-pfams" 
-  #anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
-  #echo "Running anvi-setup-kegg-kofams" # yaml update
-  #anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
-  #echo "anvi-setup-interacdome"
-  #anvi-setup-interacdome --interacdome-data-dir /data/anviodb/Interacdome
+  echo "Running anvi-setup-pfams" 
+  anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
+  echo "Running anvi-setup-kegg-kofams" # yaml update
+  anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
+  echo "anvi-setup-interacdome"
+  anvi-setup-interacdome --interacdome-data-dir /data/anviodb/Interacdome
+
+  # currently getting an error when running Anvio pdb script
   #echo "anvi-setup-pdb-database"
-  #anvi-setup-pdb-database -T 1 --pdb-database-path /data/anviodb/PDB.db
+  #anvi-setup-pdb-database -T 4 --pdb-database-path /data/anviodb/PDB.db
+
   cd /data/anviodb
-  #if [ -d "/data/anviodb/COG/COG20" -a -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" -a -s "/data/anviodb/KEGG/MODULES.db" -a -s "/data/anviodb/KEGG/HMMs/Kofam.hmm" ] ; then
-  if [ -d "/data/anviodb/COG/COG20" -a -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" ] ; then
+  if [ -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3f" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3i" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3m" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3p" -a -s "/data/anviodb/KEGG/MODULES.db" -a -s "/data/anviodb/Interacdome/Pfam-A.hmm" ] ; then
     echo "DATA DOWNLOADED SUCCESSFULLY"
     touch /data/__READY__
   else
