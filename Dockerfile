@@ -76,9 +76,9 @@ RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-pac
 #RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
 
 RUN cd /miniconda/lib/python3.6/site-packages/anvio && \
-    for file in *.py; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done && \
-    cd /miniconda/bin && \
-    for file in anvi*; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done 
+    for file in *.py; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done
+    #cd /miniconda/bin && \
+    #for file in anvi*; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done 
 
 # fix the thing we did above during anvio install
 RUN pip install pandas==0.25.1
