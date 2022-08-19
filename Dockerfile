@@ -73,10 +73,10 @@ RUN wget http://eddylab.org/infernal/infernal-1.1.4-linux-intel-gcc.tar.gz && \
 RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
 
 # protip: don't put emojis in your code
-#RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
+RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
 
-RUN cd /miniconda/lib/python3.6/site-packages/anvio && \
-    for file in *.py; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done
+#RUN cd /miniconda/lib/python3.6/site-packages/anvio && \
+#    for file in *.py; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done
     #cd /miniconda/bin && \
     #for file in anvi*; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done 
 
