@@ -74,6 +74,9 @@ RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-pac
 
 # protip: don't put emojis in your code
 RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
+RUN sed -i 's/successfully recovered../successfully recovered/' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
+RUN sed -i 's/{contig} ..)$/{contig} \")/' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
+RUN sed -i 's/ Sorry.*/ Sorry\")/' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
 
 #RUN cd /miniconda/lib/python3.6/site-packages/anvio && \
 #    for file in *.py; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done
