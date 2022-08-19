@@ -26,10 +26,10 @@ elif [ "${1}" = "init" ] ; then
   # echo "anvi-setup-trna-taxonomy"
   # anvi-setup-trna-taxonomy -T 4 --trna-taxonomy-data-dir /data/anviodb/tRNA # data-dir location ignored
 
-  echo "Running anvi-setup-ncbi-cogs"
-  anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
-  echo "Running anvi-setup-pfams" 
-  anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
+  #echo "Running anvi-setup-ncbi-cogs"
+  #anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
+  #echo "Running anvi-setup-pfams" 
+  #anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
   echo "Running anvi-setup-kegg-kofams" # yaml update
   anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
   echo "anvi-setup-interacdome"
