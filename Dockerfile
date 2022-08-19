@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y libgsl0-dev samtools git zip unzip bedt
 # https://github.com/merenlab/anvio/issues/1637
 RUN wget https://github.com/merenlab/anvio/releases/download/v7.1/anvio-7.1.tar.gz && \
     tar -xvzf anvio-7.1.tar.gz && \
+    # need to use default pandas for now, fixing below
     sed -i 's/pandas==0.25.1/pandas/' /anvio-7.1/requirements.txt && \
     tar -czvf anvio-7.1.tar.gz /anvio-7.1
 
@@ -72,7 +73,15 @@ RUN wget http://eddylab.org/infernal/infernal-1.1.4-linux-intel-gcc.tar.gz && \
 RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
 
 # protip: don't put emojis in your code
-RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
+#RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
+
+RUN cd /miniconda/lib/python3.6/site-packages/anvio && \
+    for file in *.py; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done && \
+    cd /miniconda/bin && \
+    for file in anvi*; do iconv -f utf-8 -t utf-8 -c $file > tmp; mv tmp $file; done 
+
+# fix the thing we did above during anvio install
+RUN pip install pandas==0.25.1
 
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
