@@ -68,7 +68,11 @@ RUN wget http://eddylab.org/infernal/infernal-1.1.4-linux-intel-gcc.tar.gz && \
     cp /kb/module/lib/kb_anvio/bin/infernal-1.1.4-linux-intel-gcc/binaries/cmsearch /usr/local/bin/cmsearch && \
     cp /kb/module/lib/kb_anvio/bin/infernal-1.1.4-linux-intel-gcc/binaries/cmscan /usr/local/bin/cmscan
 
+# terminal length becomes negative value in KBase console --> hardcoding wrap_width
 RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
+
+# protip: don't put emojis in your code
+RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
 
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
