@@ -72,7 +72,7 @@ RUN wget http://eddylab.org/infernal/infernal-1.1.4-linux-intel-gcc.tar.gz && \
 # terminal length becomes negative value in KBase console --> hardcoding wrap_width
 RUN sed -i 's/wrap_width .*/wrap_width = 100/' /miniconda/lib/python3.6/site-packages/anvio/terminal.py
 
-# protip: don't put emojis in your code
+# removing emojis in code
 RUN sed -i 's/attention and patience../attention and patience./' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
 RUN sed -i 's/successfully recovered../successfully recovered/' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
 RUN sed -i 's/{contig} ..)$/{contig} \")/' /miniconda/lib/python3.6/site-packages/anvio/kegg.py
