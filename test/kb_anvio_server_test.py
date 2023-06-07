@@ -121,7 +121,7 @@ class kb_anvioTest(unittest.TestCase):
         #
         # building Assembly
         #
-        assembly_filename1 = 'small_arctic_assembly.fa'
+        assembly_filename1 = 'small_arctic_assembly_mini.fa'
         cls.assembly_filename_path1 = os.path.join(cls.scratch, assembly_filename1)
         shutil.copy(os.path.join("data", assembly_filename1), cls.assembly_filename_path1)
 
@@ -135,6 +135,24 @@ class kb_anvioTest(unittest.TestCase):
         # puts assembly object onto shock
         cls.assembly_ref1 = cls.au.save_assembly_from_fasta(assembly_params1)
 
+
+        #
+        # building Assembly
+        #
+        assembly_filename2 = 'small_arctic_assembly.fa'
+        cls.assembly_filename_path2 = os.path.join(cls.scratch, assembly_filename2)
+        shutil.copy(os.path.join("data", assembly_filename2), cls.assembly_filename_path2)
+
+        # from scratch upload to workspace
+        assembly_params2 = {
+            'file': {'path': cls.assembly_filename_path2},
+            'workspace_name': cls.ws_info[1],
+            'assembly_name': 'MyAssembly2'
+        }
+
+        # puts assembly object onto shock
+        cls.assembly_ref2 = cls.au.save_assembly_from_fasta(assembly_params2)
+
     def getWsClient(self):
         return self.__class__.wsClient
 
@@ -147,83 +165,21 @@ class kb_anvioTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
-    # def test_bad_run_anvio_params(self):
-    #     method_name = 'test_bad_run_anvio_params'
+    # def test_run_anvio_no_read_input_test(self):
+    #     method_name = 'test_run_anvio_no_read_input_test'
     #     print ("\n=================================================================")
     #     print ("RUNNING "+method_name+"()")
     #     print ("=================================================================\n")
-
-    #     invalidate_input_params = {
-    #       'missing_assembly_ref': 'assembly_ref1',
-    #       'binned_contig_name': 'binned_contig_name',
-    #       'workspace_name': 'workspace_name',
-    #       'reads_list': 'reads_list',
-    #       'read_mapping_tool': 'read_mapping_tool'
-    #     }
-    #     with self.assertRaisesRegex(
-    #                 ValueError, '"assembly_ref" parameter is required, but missing'):
-    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
-
-    #     invalidate_input_params = {
-    #       'assembly_ref': 'assembly_ref1',
-    #       'missing_binned_contig_name': 'binned_contig_name',
-    #       'workspace_name': 'workspace_name',
-    #       'reads_list': 'reads_list',
-    #       'read_mapping_tool': 'read_mapping_tool'
-    #     }
-    #     with self.assertRaisesRegex(
-    #                 ValueError, '"binned_contig_name" parameter is required, but missing'):
-    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
-
-    #     invalidate_input_params = {
-    #       'assembly_ref': 'assembly_ref1',
-    #       'binned_contig_name': 'binned_contig_name',
-    #       'missing_workspace_name': 'workspace_name',
-    #       'reads_list': 'reads_list',
-    #       'read_mapping_tool': 'read_mapping_tool'
-    #     }
-    #     with self.assertRaisesRegex(
-    #                 ValueError, '"workspace_name" parameter is required, but missing'):
-    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
-
-    #     invalidate_input_params = {
-    #       'assembly_ref': 'assembly_ref1',
-    #       'binned_contig_name': 'binned_contig_name',
-    #       'workspace_name': 'workspace_name',
-    #       'missing_reads_list': 'reads_list',
-    #       'read_mapping_tool': 'read_mapping_tool'
-    #     }
-    #     with self.assertRaisesRegex(
-    #                 ValueError, '"reads_list" parameter is required, but missing'):
-    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
-
-    #     invalidate_input_params = {
-    #       'assembly_ref': 'assembly_ref1',
-    #       'binned_contig_name': 'binned_contig_name',
-    #       'workspace_name': 'workspace_name',
-    #       'reads_list': 'reads_list',
-    #       'missing_read_mapping_tool': 'read_mapping_tool'
-    #     }
-    #     with self.assertRaisesRegex(
-    #                 ValueError, '"read_mapping_tool" parameter is required, but missing'):
-    #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
-
-
-    def test_run_anvio_no_read_input_test(self):
-        method_name = 'test_run_anvio_no_read_input_test'
-        print ("\n=================================================================")
-        print ("RUNNING "+method_name+"()")
-        print ("=================================================================\n")
-        # anvio should run to completion here
-        ret = self.getImpl().run_kb_anvio(self.getContext(),
-                                            {'workspace_name': self.getWsName(),
-                                             'assembly_ref': self.assembly_ref1,
-                                             'read_mapping_tool': 'bowtie2_default',
-                                             'min_contig_length': 3000,
-                                             'contig_split_size': 20000,
-                                             'kmer_size': 4,
-                                             'reads_list': []})
-
+    #     # anvio should run to completion here
+    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
+    #                                         {'workspace_name': self.getWsName(),
+    #                                          'assembly_ref': self.assembly_ref1,
+    #                                          'read_mapping_tool': 'bowtie2_default',
+    #                                          'min_contig_length': 3000,
+    #                                          'contig_split_size': 20000,
+    #                                          'kmer_size': 4,
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': []})
 
     # def test_run_anvio_multiple_read_input_test1(self):
     #     method_name = 'test_run_anvio_multiple_read_input_test1'
@@ -238,8 +194,26 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref] })
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref]})
 
+
+    def test_run_anvio_trna(self):
+        method_name = 'test_run_anvio_bbmap_default'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
+
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref2,
+                                             'read_mapping_tool': 'bbmap_default',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'trna_run': 'yes',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
     # def test_run_anvio_bbmap_default(self):
     #     method_name = 'test_run_anvio_bbmap_default'
@@ -253,17 +227,10 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'assembly_ref': self.assembly_ref1,
     #                                          'read_mapping_tool': 'bbmap_default',
     #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 10000,
-    #                                          'contig_split_overlap': 0,
+    #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'max_clusters_for_vgmm': 400,
-    #                                          'max_iterations_for_vgmm': 500,
-    #                                          'total_percentage_pca': 90,
-    #                                          'no_cov_normalization': '--no_cov_normalization',
-    #                                          'no_total_coverage': '--no_total_coverage',
-    #                                          'binned_contig_name': 'anvio_bin_obj',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref] })
-
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
     # def test_run_anvio_bbmap_fast(self):
     #     method_name = 'test_run_anvio_bbmap_fast'
@@ -277,17 +244,10 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'assembly_ref': self.assembly_ref1,
     #                                          'read_mapping_tool': 'bbmap_fast',
     #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 10000,
-    #                                          'contig_split_overlap': 0,
+    #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'max_clusters_for_vgmm': 400,
-    #                                          'max_iterations_for_vgmm': 500,
-    #                                          'total_percentage_pca': 90,
-    #                                          'no_cov_normalization': '--no_cov_normalization',
-    #                                          'no_total_coverage': '--no_total_coverage',
-    #                                          'binned_contig_name': 'anvio_bin_obj',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref] })
-
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
     # def test_run_anvio_bbmap_very_sensitive(self):
     #     method_name = 'test_run_anvio_bbmap_very_sensitive'
@@ -301,16 +261,10 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'assembly_ref': self.assembly_ref1,
     #                                          'read_mapping_tool': 'bbmap_very_sensitive',
     #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 10000,
-    #                                          'contig_split_overlap': 0,
+    #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'max_clusters_for_vgmm': 400,
-    #                                          'max_iterations_for_vgmm': 500,
-    #                                          'total_percentage_pca': 90,
-    #                                          'no_cov_normalization': '--no_cov_normalization',
-    #                                          'no_total_coverage': '--no_total_coverage',
-    #                                          'binned_contig_name': 'anvio_bin_obj',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref] })
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
     # def test_run_anvio_bowtie2_default(self):
     #     method_name = 'test_run_anvio_bowtie2_default'
@@ -324,16 +278,10 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'assembly_ref': self.assembly_ref1,
     #                                          'read_mapping_tool': 'bowtie2_default',
     #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 10000,
-    #                                          'contig_split_overlap': 0,
+    #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'max_clusters_for_vgmm': 400,
-    #                                          'max_iterations_for_vgmm': 500,
-    #                                          'total_percentage_pca': 90,
-    #                                          'no_cov_normalization': '--no_cov_normalization',
-    #                                          'no_total_coverage': '--no_total_coverage',
-    #                                          'binned_contig_name': 'anvio_bin_obj',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref] })
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
     # def test_run_anvio_bowtie2_very_sensitive(self):
     #     method_name = 'test_run_anvio_bowtie2_very_sensitive'
@@ -347,16 +295,10 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'assembly_ref': self.assembly_ref1,
     #                                          'read_mapping_tool': 'bowtie2_very_sensitive',
     #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 10000,
-    #                                          'contig_split_overlap': 0,
+    #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'max_clusters_for_vgmm': 400,
-    #                                          'max_iterations_for_vgmm': 500,
-    #                                          'total_percentage_pca': 90,
-    #                                          'no_cov_normalization': '--no_cov_normalization',
-    #                                          'no_total_coverage': '--no_total_coverage',
-    #                                          'binned_contig_name': 'anvio_bin_obj',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref] })
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
     # def test_run_anvio_minimap2(self):
     #     method_name = 'test_run_anvio_minimap2'
@@ -370,44 +312,24 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'assembly_ref': self.assembly_ref1,
     #                                          'read_mapping_tool': 'minimap2',
     #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 10000,
-    #                                          'contig_split_overlap': 0,
+    #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
-    #                                          'max_clusters_for_vgmm': 400,
-    #                                          'max_iterations_for_vgmm': 500,
-    #                                          'total_percentage_pca': 90,
-    #                                          'no_cov_normalization': '--no_cov_normalization',
-    #                                          'no_total_coverage': '--no_total_coverage',
-    #                                          'binned_contig_name': 'anvio_bin_obj',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref] })
-    #     self._test_bc_headers(ret)
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def _test_bc_headers(self, ret):
+    # def test_run_anvio_hisat2(self):
+    #     method_name = 'test_run_anvio_hisat2'
+    #     print ("\n=================================================================")
+    #     print ("RUNNING "+method_name+"()")
+    #     print ("=================================================================\n")
 
-    #     bc_upa = ret[0]['binned_contig_obj_ref']
-
-    #     bc_objData = self.dfu.get_objects({
-    #         'object_refs': [bc_upa]
-    #         })['data'][0]['data']
-
-    #     assembly_objData = self.dfu.get_objects({
-    #         'object_refs': [bc_objData['assembly_ref']]
-    #         })['data'][0]['data']
-
-
-    #     bc_header_l = sum([list(bin['contigs'].keys()) for bin in bc_objData['bins']], [])
-    #     assembly_header_l = list(assembly_objData['contigs'].keys())
-
-    #     assert len(bc_header_l) > 0 and len(assembly_header_l) > 0
-
-    #     print('Sampling headers ...', bc_header_l[0], assembly_header_l[0])
-
-    #     bc_header_set = set(bc_header_l)
-    #     assembly_header_set = set(assembly_header_l)
-
-    #     if len(bc_header_set) < len(bc_header_l):
-    #         print('Warning: BinnedContigs headers not unique')
-    #     if len(assembly_header_set) < len(assembly_header_l):
-    #         print('Warning: Assembly headers not unique')
-
-    #     assert bc_header_set.issubset(assembly_header_set)
+    #     # anvio should run to completion here
+    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
+    #                                         {'workspace_name': self.getWsName(),
+    #                                          'assembly_ref': self.assembly_ref1,
+    #                                          'read_mapping_tool': 'hisat2',
+    #                                          'min_contig_length': 3000,
+    #                                          'contig_split_size': 20000,
+    #                                          'kmer_size': 4,
+    #                                          'trna_run': 'no',
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})       

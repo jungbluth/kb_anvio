@@ -53,7 +53,7 @@ class AnvioUtil:
         log('Start validating run_anvio params')
 
         # check for required parameters
-        for p in ['assembly_ref', 'workspace_name', 'reads_list', 'read_mapping_tool', 'kmer_size', 'contig_split_size', 'min_contig_length']:
+        for p in ['assembly_ref', 'workspace_name', 'reads_list', 'read_mapping_tool', 'kmer_size', 'contig_split_size', 'min_contig_length', 'trna_run']:
             if p not in task_params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
@@ -472,7 +472,8 @@ class AnvioUtil:
         self._run_command(command)
 
     def run_anvi_scan_trnas(self):
-        command = 'anvi-scan-trnas '
+        command = 'anvi-setup-trna-taxonomy -T 1 && '
+        command += 'anvi-scan-trnas '
         command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--trna-cutoff-score 20'
@@ -664,9 +665,9 @@ class AnvioUtil:
 
         self.run_anvi_run_scg_taxonomy()
 
-        # self.run_anvi_scan_trnas()
-
-        # self.run_anvi_run_trna_taxonomy()
+        if task_params['trna_run'] == 'yes':
+            self.run_anvi_scan_trnas()
+            self.run_anvi_run_trna_taxonomy()
 
         # get reads
         if task_params['reads_list']:

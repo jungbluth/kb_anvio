@@ -95,7 +95,7 @@
           "default_values": [ 2500 ],
           "field_type": "text",
           "text_options": {
-              "min_int" : 1000,
+              "min_int" : 100,
               "validate_as" : "int"
             }
         },
@@ -122,6 +122,30 @@
               "min_int" : 2,
               "max_int" : 6,
               "validate_as" : "int"
+            }
+        },
+                {
+            "id": "trna_run",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "no" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "no",
+                        "display": "No",
+                        "id": "no",
+                        "ui_name": "No"
+                    },
+                    {
+                        "value": "yes",
+                        "display": "Yes",
+                        "id": "yes",
+                        "ui_name": "Yes"
+                    }
+                ]
             }
         }
     ],
@@ -160,6 +184,10 @@
                 {
                     "input_parameter": "kmer_size",
                     "target_property": "kmer_size"
+                },
+                {
+                    "input_parameter": "trna_run",
+                    "target_property": "trna_run"
                 }
             ],
             "output_mapping": [

@@ -15,14 +15,14 @@ screenshots: []
 suggestions:
     apps:
         related:
-            [kb_maxbin, kbase-metabat, kb_cocacola, kb_das_tool]
+            [kb_maxbin, kbase-metabat, kb_concoct, kb_das_tool]
         next:
-            [kb_Msuite, MetaAnnot]
+            []
     methods:
         related:
             []
         next:
-            ["kb_Msuite.run_checkM_lineage_wf"]
+            []
 
 #
 # Configure the display and description of parameters
@@ -58,21 +58,36 @@ parameters :
         short-hint : kmer length (default 4)
         long-hint  : kmer length (default 4)
 
+    trna_run :
+        ui-name : Run tRNA detection and taxonomic inference
+        short-hint : trna detect (default no)
+        long-hint  : trna detect (default no)
+
 description : |
     <p>Anvi'o is an open-source, community-driven analysis and visualization platform for microbial 'omics.</p>
     <p>Anvi'o is a platform that enables multiple forms of microbiological research, inlcuding, genomics, metagenomics, metatranscriptomics, pangenomics, metapangenomics, phylogenomics, and microbial population genetics.</p>
     <p>Anvi'o integrates multiple input analysis products into a single interactive visualization tool. </p>
     <p><hr></p>
+    <p><b>Becauase the interactivity of Anvi'o is not yet supported in KBase, users will still need to run Anvi'o locally without KBase to explore files output from the app.</b></p>
+    <p><hr></p>
+    <p>The KBase Anvi'o wrapper is under active development. Please report bugs and or feature requests to the <a href="https://kbase-jira.atlassian.net/">KBase Help Board</a>. </p>
+    <p>The full Anvi'o suite contains many different workflows, tools, and methods not featured in this version of the KBase wrapper. </p>
+    <p>Anvi'o commands used in this KBase app include: anvi-script-reformat-fasta, anvi-gen-contigs-database, anvi-init-bam, anvi-merge, </p>
+    <p>anvi-run-hmms, anvi-run-ncbi-cogs, anvi-run-pfams, anvi-run-scg-taxonomy, anvi-scan-trnas, anvi-run-trna-taxonomy, and anvi-profile. </p>
+    <p>Commands are run in a sequence to prepare the main two standard Anvi'o typed objects required to use the tool interactively, including the contigs database and the reads profile database(s).</p>
+    <p><hr></p>
     <p><b>Configuration:</b></p>
     <p><b><i>Assembly Object:</i></b> The Assembly object is a collection of assembled genome fragments, called "contigs".  Currently only a single Assembly Object is accepted by the Anvi'o App.</p>
     <p><b><i>Read Library Object(s):</i></b> The read libraries are aligned to the assembly using a selected read mapper.</p>
-    <p><b><i>Minimum Contig Length:</i></b> Contigs that are too short may slow down analysis.  A value of 2500 bp is a reasonable cutoff, but as low as 1000 bp can be used.</p>
+    <p><b><i>Read Mapping Tool:</i></b> Tool to use for mapping short reads to contigs. Options include: bbmap_fast, bbmap_default, bbmap_very_sensitive, bowtie2_default, bowtie2_very_sensitive, minimap2, hisat2</p>
+    <p><b><i>Minimum Contig Length:</i></b> Contigs that are too short may slow down analysis.  A value of 2500 bp is a reasonable cutoff for metagenome assemblies, but as low as 100 bp can be used.</p>
     <p><b><i>Contig Split Size:</i></b> Contigs are split before clustering to minimize the bias imposed by very large contigs. A value of 5000-10000 bp is a reasonable cutoff.</p>
     <p><b><i>Kmer Length:</i></b> Size of the kmers used during profiling.  A default value of 4 is reasonable to start with. Note: adjusting the kmer length will impact speed.</p>
+    <p><b><i>tRNA Run:</i></b> Select to run tRNA detection and taxonomic assignment.</p>
     <p><hr></p>
     <p><b>Output:</b></p>
     <p><b><i>Output Summary Report:</i></b>Overview of the Anvi'o generated database.</p>
-    <p><b><i>Downloadable files:</i></b> The key Anvi'o output files - contigs.db and associate reads profile files may be downloaded as a zip file.</p>
+    <p><b><i>Downloadable files:</i></b> The key Anvi'o output files - contigs database and associate reads profile files may be downloaded as a zip file.</p>
     <p><hr></p>
     <p><i>Implemented for KBase by <a href="mailto:sjungbluth@lbl.gov">Sean Jungbluth(sjungbluth@lbl.gov)</a></i></p>
 
