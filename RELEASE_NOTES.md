@@ -4,8 +4,7 @@
 ToDo
 -----
 * Better tests for db installs
-* Threads turned to a variable
-* Interactome and others as modules
+* Interactome, PDB, and others as modules
 * Better install to correct wrong pandas version
 * Install more missing software from list here: https://anvio.org/install/
 * List database versions in documentation

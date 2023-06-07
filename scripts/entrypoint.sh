@@ -30,8 +30,8 @@ elif [ "${1}" = "init" ] ; then
   anvi-setup-ncbi-cogs -T 4 --just-do-it --cog-data-dir /data/anviodb/COG
   echo "Running anvi-setup-pfams" 
   anvi-setup-pfams --pfam-data-dir /data/anviodb/Pfam
-  echo "Running anvi-setup-kegg-kofams" # yaml update
-  anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
+  # echo "Running anvi-setup-kegg-kofams" # yaml update
+  # anvi-setup-kegg-kofams --download-from-kegg --kegg-data-dir /data/anviodb/KEGG
   #echo "anvi-setup-interacdome"
   #anvi-setup-interacdome --interacdome-data-dir /data/anviodb/Interacdome
 
@@ -40,9 +40,9 @@ elif [ "${1}" = "init" ] ; then
   #anvi-setup-pdb-database -T 4 --pdb-database-path /data/anviodb/PDB.db
 
   cd /data/anviodb
-  # dont have interactome downloaded and functioning yet
+  # dont have interactome and kegg downloaded and functioning yet
   #if [ -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3f" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3i" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3m" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3p" -a -s "/data/anviodb/KEGG/MODULES.db" -a -s "/data/anviodb/Interacdome/Pfam-A.hmm" ] ; then
-  if [ -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3f" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3i" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3m" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3p" -a -s "/data/anviodb/KEGG/MODULES.db" ] ; then
+  if [ -s "/data/anviodb/COG/COG20/DB_DIAMOND/COG.dmnd" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3f" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3i" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3m" -a -s "/data/anviodb/Pfam/Pfam-A.hmm.h3p" ] ; then
    echo "DATA DOWNLOADED SUCCESSFULLY"
    touch /data/__READY__
   else

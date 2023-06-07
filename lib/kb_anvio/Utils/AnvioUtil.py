@@ -29,12 +29,12 @@ def log(message, prefix_newline=False):
 
 
 class AnvioUtil:
-    #ANVIO_BASE_PATH = '/kb/deployment/bin/ANVIO'
+    # ANVIO_BASE_PATH = '/kb/deployment/bin/ANVIO'
     ANVIO_RESULT_DIRECTORY = 'anvio_output_dir'
     BINNER_BIN_RESULT_DIR = 'final_bins'
     MAPPING_THREADS = 4
     BBMAP_MEM = '30g'
-    MAX_NODES = 6  # for KBParallels
+    # MAX_NODES = 6  # for KBParallels
 
     def __init__(self, config):
         self.callback_url = config['SDK_CALLBACK_URL']
@@ -219,92 +219,13 @@ class AnvioUtil:
         log('running anvi_gen_contigs_database: {}'.format(command))
         self._run_command(command)
 
-
-
-    # def retrieve_and_clean_assembly(self, task_params):
-    #     if os.path.exists(task_params['contig_file_path']):
-    #         assembly = task_params['contig_file_path']
-    #         print("FOUND ASSEMBLY ON LOCAL SCRATCH")
-    #     else:
-    #         # we are on njsw so lets copy it over to scratch
-    #         assembly = self._get_contig_file(task_params['assembly_ref'])
-
-    #     # remove spaces from fasta headers because that breaks bedtools
-    #     assembly_clean = os.path.abspath(assembly).split('.fa')[0] + "_clean.fa"
-
-    #     # file to dump the mapping from new headers to old
-    #     header_mapping_filepath = os.path.join(self.scratch, 'header_mapping_' + str(uuid.uuid4()))
-
-    #     self.fhr.rename_fasta_headers(assembly, fasta_filepath_new=assembly_clean, cache_filepath=header_mapping_filepath)
-
-    #     """
-    #     command = '/bin/bash reformat.sh in={} out={} addunderscore overwrite=true'.format(assembly, assembly_clean)
-
-    #     log('running reformat command: {}'.format(command))
-    #     out, err = self._run_command(command)
-    #     """
-    #     return assembly_clean
-
-
-    # def generate_stats_for_genome_bins(self, task_params, genome_bin_fna_file, bbstats_output_file):
-    #     """
-    #     generate_command: bbtools stats.sh command
-    #     """
-    #     log("running generate_stats_for_genome_bins on {}".format(genome_bin_fna_file))
-    #     genome_bin_fna_file = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY, genome_bin_fna_file)
-    #     command = '/bin/bash stats.sh in={} format=3 > {}'.format(genome_bin_fna_file, bbstats_output_file)
-    #     self._run_command(command)
-    #     bbstats_output = open(bbstats_output_file, 'r').readlines()[1]
-    #     n_scaffolds = bbstats_output.split('\t')[0]
-    #     n_contigs = bbstats_output.split('\t')[1]
-    #     scaf_bp = bbstats_output.split('\t')[2]
-    #     contig_bp = bbstats_output.split('\t')[3]
-    #     gap_pct = bbstats_output.split('\t')[4]
-    #     scaf_N50 = bbstats_output.split('\t')[5]
-    #     scaf_L50 = bbstats_output.split('\t')[6]
-    #     ctg_N50 = bbstats_output.split('\t')[7]
-    #     ctg_L50 = bbstats_output.split('\t')[8]
-    #     scaf_N90 = bbstats_output.split('\t')[9]
-    #     scaf_L90 = bbstats_output.split('\t')[10]
-    #     ctg_N90 = bbstats_output.split('\t')[11]
-    #     ctg_L90 = bbstats_output.split('\t')[12]
-    #     scaf_max = bbstats_output.split('\t')[13]
-    #     ctg_max = bbstats_output.split('\t')[14]
-    #     scaf_n_gt50K = bbstats_output.split('\t')[15]
-    #     scaf_pct_gt50K = bbstats_output.split('\t')[16]
-    #     gc_avg = float(bbstats_output.split('\t')[17]) * 100  # need to figure out if correct
-    #     gc_std = float(bbstats_output.split('\t')[18]) * 100  # need to figure out if correct
-
-    #     log('Generated generate_stats_for_genome_bins command: {}'.format(command))
-
-    #     return {'n_scaffolds': n_scaffolds,
-    #             'n_contigs': n_contigs,
-    #             'scaf_bp': scaf_bp,
-    #             'contig_bp': contig_bp,
-    #             'gap_pct': gap_pct,
-    #             'scaf_N50': scaf_N50,
-    #             'scaf_L50': scaf_L50,
-    #             'ctg_N50': ctg_N50,
-    #             'ctg_L50': ctg_L50,
-    #             'scaf_N90': scaf_N90,
-    #             'scaf_L90': scaf_L90,
-    #             'ctg_N90': ctg_N90,
-    #             'ctg_L90': ctg_L90,
-    #             'scaf_max': scaf_max,
-    #             'ctg_max': ctg_max,
-    #             'scaf_n_gt50K': scaf_n_gt50K,
-    #             'scaf_pct_gt50K': scaf_pct_gt50K,
-    #             'gc_avg': gc_avg,
-    #             'gc_std': gc_std
-    #             }
-
     def deinterlace_raw_reads(self, fastq):
         fastq_forward = fastq.split('.fastq')[0] + "_forward.fastq"
         fastq_reverse = fastq.split('.fastq')[0] + "_reverse.fastq"
         command = 'deinterleave_fastq.sh < {} {} {}'.format(fastq, fastq_forward, fastq_reverse)
         try:
             self._run_command(command)
-        except:
+        except Exception:
             raise Exception("Cannot deinterlace fastq file!")
         return (fastq_forward, fastq_reverse)
 
@@ -987,21 +908,21 @@ class AnvioUtil:
         #assembly_clean = self.retrieve_and_clean_assembly(task_params)
         #task_params['contig_file_path'] = assembly_clean
 
-        # get reads
-        (reads_list_file, read_type) = self.stage_reads_list_file(task_params['reads_list'])
-        task_params['read_type'] = read_type
-        task_params['reads_list_file'] = reads_list_file
-
         self.run_anvi_run_hmms()
         self.run_anvi_run_ncbi_cog()
         self.run_anvi_run_pfams()
         self.run_anvi_run_kegg_kofams()
-        self.run_anvi_run_interacdome()
+        #self.run_anvi_run_interacdome()
         #self.run_anvi_run_scg_taxonomy()
         #self.run_anvi_scan_trnas()
         #self.run_anvi_run_trna_taxonomy()
 
-        self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
+        # get reads
+        if task_params['reads_list']:
+            (reads_list_file, read_type) = self.stage_reads_list_file(task_params['reads_list'])
+            task_params['read_type'] = read_type
+            task_params['reads_list_file'] = reads_list_file
+            self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
 
         # file handling and management
         os.chdir(cwd)
@@ -1017,9 +938,6 @@ class AnvioUtil:
         #     'binned_contig_name': task_params['binned_contig_name'],
         #     'workspace_name': task_params['workspace_name']
         # }
-
-        # binned_contig_obj_ref = \
-        #     self.mgu.file_to_binned_contigs(generate_binned_contig_param).get('binned_contig_obj_ref')
 
         # generate report
         reportVal = self.generate_report(task_params)
