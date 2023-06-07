@@ -492,9 +492,11 @@ class AnvioUtil:
     def generate_dummy_anvio_profile(self):
         command = 'anvi-profile '
         command += '-c contigs.db '
+        command += '--blank-profile '
         command += '-o BLANK-PROFILE/ '
         command += '-S BLANK'
         log('running anvi-profile: {}'.format(command))
+        self._run_command(command)
 
     def generate_output_file_list(self, result_directory):
         """
@@ -657,9 +659,13 @@ class AnvioUtil:
         self.run_anvi_run_pfams()
 
         # self.run_anvi_run_kegg_kofams()
+
         # self.run_anvi_run_interacdome()
-        # self.run_anvi_run_scg_taxonomy()
+
+        self.run_anvi_run_scg_taxonomy()
+
         # self.run_anvi_scan_trnas()
+
         # self.run_anvi_run_trna_taxonomy()
 
         # get reads

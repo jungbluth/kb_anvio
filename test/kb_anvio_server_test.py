@@ -92,7 +92,7 @@ class kb_anvioTest(unittest.TestCase):
             'interleaved': 'true'
         }
 
-        #from scratch upload to workspace
+        # from scratch upload to workspace
 
         cls.int1_oldstyle_reads_ref = cls.ru.upload_reads(int1_reads_params)['obj_ref']
         print("cls.int1_oldstyle_reads_ref***")
@@ -114,7 +114,7 @@ class kb_anvioTest(unittest.TestCase):
             'interleaved': 'true'
         }
 
-        #from scratch upload to workspace
+        # from scratch upload to workspace
         cls.int2_oldstyle_reads_ref = cls.ru.upload_reads(int2_reads_params)['obj_ref']
 
 
@@ -209,8 +209,8 @@ class kb_anvioTest(unittest.TestCase):
     #         self.getImpl().run_kb_anvio(self.getContext(), invalidate_input_params)
 
 
-    def test_run_anvio_multiple_read_input_test1(self):
-        method_name = 'test_run_anvio_multiple_read_input_test1'
+    def test_run_anvio_no_read_input_test(self):
+        method_name = 'test_run_anvio_no_read_input_test'
         print ("\n=================================================================")
         print ("RUNNING "+method_name+"()")
         print ("=================================================================\n")
@@ -222,8 +222,23 @@ class kb_anvioTest(unittest.TestCase):
                                              'min_contig_length': 3000,
                                              'contig_split_size': 20000,
                                              'kmer_size': 4,
-                                             'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref] })
-                                            # 'reads_list': [self.int1_oldstyle_reads_ref] })
+                                             'reads_list': []})
+
+
+    # def test_run_anvio_multiple_read_input_test1(self):
+    #     method_name = 'test_run_anvio_multiple_read_input_test1'
+    #     print ("\n=================================================================")
+    #     print ("RUNNING "+method_name+"()")
+    #     print ("=================================================================\n")
+    #     # anvio should run to completion here
+    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
+    #                                         {'workspace_name': self.getWsName(),
+    #                                          'assembly_ref': self.assembly_ref1,
+    #                                          'read_mapping_tool': 'bowtie2_default',
+    #                                          'min_contig_length': 3000,
+    #                                          'contig_split_size': 20000,
+    #                                          'kmer_size': 4,
+    #                                          'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref] })
 
 
     # def test_run_anvio_bbmap_default(self):
