@@ -34,7 +34,6 @@ class AnvioUtil:
     BINNER_BIN_RESULT_DIR = 'final_bins'
     MAPPING_THREADS = 4
     BBMAP_MEM = '30g'
-    # MAX_NODES = 6  # for KBParallels
 
     def __init__(self, config):
         self.callback_url = config['SDK_CALLBACK_URL']
@@ -45,60 +44,6 @@ class AnvioUtil:
         self.ru = ReadsUtils(self.callback_url)
         self.au = AssemblyUtil(self.callback_url)
         self.mgu = MetagenomeUtils(self.callback_url)
-        # self.parallel_runner = KBParallel(self.callback_url)
-
-    # def set_up_parallel_tasks(self, task_params):
-
-    #     # lets create the tasks that will be run in parallel
-    #     tasks = []
-    #     reads_list = task_params['reads_list']
-
-    #     for fastq in reads_list:
-    #         print("ADDING FASTQ FILE".format(fastq))
-    #         task_params = copy.deepcopy(task_params)
-    #         task_params['fastq'] = fastq
-    #         module_input = 'kb_anvio'
-    #         function_for_parallelizing = 'generate_alignment_bams'
-    #         tasks.append( {'module_name': module_input,
-    #                         'function_name': function_for_parallelizing,
-    #                         'version': 'dev',
-    #                         'parameters': { task_params, assembly_clean }
-    #                       } )
-
-    #     # calculate how many nodes we need (max=5)
-    #     num_nsjw_nodes_required=0
-    #     num_fastq = len(reads_list)
-    #     if num_fastq < self.MAX_NODES:
-    #         num_nsjw_nodes_required = num_fastq
-    #     else:
-    #         num_nsjw_nodes_required = self.MAX_NODES
-    #         num_nsjw_nodes_required -= 1
-
-    #     # kbparallel requires these params
-    #     batch_run_params = {'tasks': tasks,
-    #                         'runner': 'parallel',
-    #                         'concurrent_local_tasks': 1,
-    #                         'concurrent_njsw_tasks': 0, #num_nsjw_nodes_required,
-    #                         'max_retries': 2}
-
-    #     # We'll run the alignments in parallel here
-    #     log('--->\nlaunching parallel jobs\n')
-    #     kbparallel_results = self.parallel_runner.run_batch(batch_run_params)
-
-    #     # print('KBPARALLLEL RESULTS')
-    #     # pprint(kbparallel_results)
-    #     # sys.exit()
-
-    #     # ======================== #
-    #     # back on the master node.
-    #     # write depth.txt files to json files before trying to
-    #     # merge them into one file for debugging reasons
-    #     # -------------------------------------------------
-    #     # check for errors returned by njsw remote jobs
-    #     for fd in kbparallel_results['results']:
-    #         if fd['result_package']['error'] is not None:
-    #             log('kb_parallel failed to complete without throwing an error on at least one of the kbparallel-njsw nodes.')
-    #             sys.exit(1)
 
     def _validate_run_anvio_params(self, task_params):
         """
@@ -373,7 +318,6 @@ class AnvioUtil:
         log('running alignment command: {}'.format(command))
         out, err = self._run_command(command)
 
-
     def convert_sam_to_sorted_and_indexed_bam(self, sam):
         # create bam files from sam files
         sorted_bam = os.path.abspath(sam).split('.sam')[0] + "_sorted.bam"
@@ -420,7 +364,6 @@ class AnvioUtil:
         log('running anvi-profile: {}'.format(command))
         self._run_command(command)
 
-
     def generate_alignment_bams_and_prep_for_anvio(self, task_params, assembly_clean):
         """
             This function runs the selected read mapper and creates the
@@ -441,7 +384,7 @@ class AnvioUtil:
             fastq_type = read_type[i]
 
             sam = os.path.basename(fastq).split('.fastq')[0] + ".sam"
-            #sam = os.path.join(self.ANVIO_RESULT_DIRECTORY, sam)
+            # sam = os.path.join(self.ANVIO_RESULT_DIRECTORY, sam)
 
             if fastq_type == 'interleaved':  # make sure working - needs tests
                 log("Running interleaved read mapping mode")
@@ -461,7 +404,6 @@ class AnvioUtil:
         if len(task_params['reads_list']) > 1:
             self.run_anvi_merge(task_params)
 
-
         return sorted_bam_file_list
 
     def run_anvi_merge(self, task_params):
@@ -474,167 +416,6 @@ class AnvioUtil:
         log('running run_anvi_merge: {}'.format(command))
         self._run_command(command)
 
-
-    # def generate_make_coverage_table_command(self, task_params, sorted_bam_file_list):
-    #     # create the depth file for this bam
-    #     #
-    #     min_contig_length = task_params['min_contig_length']
-    #     sorted_bam = task_params['sorted_bam']
-
-    #     depth_file_path = os.path.join(self.scratch, str('anvio_depth.txt'))
-    #     command = '/kb/module/lib/kb_anvio/bin/jgi_summarize_bam_contig_depths '
-    #     command += '--outputDepth {} '.format(depth_file_path)
-    #     command += '--minContigLength {} '.format(min_contig_length)
-    #     command += '--minContigDepth 1 {}'.format(sorted_bam)
-
-    #     log('running summarize_bam_contig_depths command: {}'.format(command))
-    #     self._run_command(command)
-
-    #     return depth_file_path
-
-    # def fix_generate_anvio_command_ui_bug(self, task_params):
-    #     # needed to get checkbox for UI to work with string objects, for some
-    #     # reason strings are converted to numerics when running inside KBase UI.
-    #     parameter_no_total_coverage = task_params['no_total_coverage']
-    #     parameter_no_cov_normalization = task_params['no_cov_normalization']
-
-    #     if task_params['no_total_coverage'] is 1:
-    #         parameter_no_total_coverage = '--no_total_coverage'
-    #     elif task_params['no_total_coverage'] is 0:
-    #         parameter_no_total_coverage = ' '
-
-    #     if task_params['no_cov_normalization'] is 1:
-    #         parameter_no_cov_normalization = '--no_cov_normalization'
-    #     elif task_params['no_cov_normalization'] is 0:
-    #         parameter_no_cov_normalization = ' '
-
-    #     return (parameter_no_total_coverage, parameter_no_cov_normalization)
-
-    # def generate_anvio_cut_up_fasta_command(self, task_params):
-    #     """
-    #     generate_command: anvio cut_up_fasta
-    #     """
-    #     contig_file_path = task_params['contig_file_path']
-    #     contig_split_size = task_params['contig_split_size']
-    #     contig_split_overlap = task_params['contig_split_overlap']
-
-    #     log("\n\nRunning generate_anvio_cut_up_fasta_command")
-
-    #     command = 'python {}/scripts/cut_up_fasta.py '.format(self.ANVIO_BASE_PATH)
-    #     command += '{} '.format(contig_file_path)
-    #     command += '-c {} '.format(contig_split_size)
-    #     command += '-o {} '.format(contig_split_overlap)
-    #     command += '--merge_last -b temp.bed > {}/split_contigs.fa'.format(self.BINNER_RESULT_DIRECTORY)
-    #     log('Generated anvio_cut_up_fasta command: {}'.format(command))
-
-    #     self._run_command(command)
-
-    # def generate_anvio_coverage_table_from_bam(self, task_params):
-    #     """
-    #     generate_command: anvio generate coverage table
-    #     """
-    #     log("\n\nRunning generate_anvio_coverage_table_from_bam")
-    #     command = 'python {}/scripts/concoct_coverage_table.py temp.bed '.format(self.ANVIO_BASE_PATH)
-    #     command += '{}/*_sorted.bam > '.format(self.BINNER_RESULT_DIRECTORY)
-    #     command += '{}/coverage_table.tsv'.format(self.BINNER_RESULT_DIRECTORY)
-    #     log('Generated anvio generate coverage table from bam command: {}'.format(command))
-
-    #     self._run_command(command)
-
-    # def generate_anvio_command(self, task_params):
-    #     """
-    #     generate_command: anvio
-    #     """
-
-    #     min_contig_length = task_params['min_contig_length']
-    #     kmer_size = task_params['kmer_size']
-    #     max_clusters_for_vgmm = task_params['max_clusters_for_vgmm']
-    #     max_iterations_for_vgmm = task_params['max_iterations_for_vgmm']
-    #     total_percentage_pca = task_params['total_percentage_pca']
-    #     parameter_no_total_coverage, parameter_no_cov_normalization = \
-    #         self.fix_generate_anvio_command_ui_bug(task_params)
-
-    #     log("\n\nRunning generate_anvio_command")
-    #     command = 'python {}/bin/concoct '.format(self.ANVIO_BASE_PATH)
-    #     command += '--composition_file {}/split_contigs.fa '.format(self.BINNER_RESULT_DIRECTORY)
-    #     command += '-l {} '.format(min_contig_length)
-    #     command += '-b {} '.format(self.BINNER_RESULT_DIRECTORY)
-    #     command += '--coverage_file {}/coverage_table.tsv '.format(self.BINNER_RESULT_DIRECTORY)
-    #     command += '-t {} '.format(self.MAPPING_THREADS)
-    #     command += '-k {} '.format(kmer_size)
-    #     command += '-c {} '.format(max_clusters_for_vgmm)
-    #     command += '-i {} '.format(max_iterations_for_vgmm)
-    #     command += '--total_percentage_pca {} '.format(total_percentage_pca)
-    #     command += '{} '.format(parameter_no_cov_normalization)
-    #     command += '{}'.format(parameter_no_total_coverage)
-    #     log('Generated anvio command: {}'.format(command))
-
-    #     self._run_command(command)
-
-    # def generate_anvio_post_clustering_merging_command(self, task_params):
-    #     """
-    #     generate_command: anvio post cluster merging
-    #     """
-    #     min_contig_length = task_params['min_contig_length']
-    #     log("\n\nRunning generate_anvio_post_clustering_merging_command")
-
-    #     command = 'python {}/scripts/merge_cutup_clustering.py '.format(self.ANVIO_BASE_PATH)
-    #     command += '{}/clustering_gt{}.csv > '.format(self.BINNER_RESULT_DIRECTORY, min_contig_length)
-    #     command += '{}/clustering_merged.csv'.format(self.BINNER_RESULT_DIRECTORY)
-    #     log('Generated generate_anvio_post_clustering_merging command: {}'.format(command))
-
-    #     self._run_command(command)
-
-
-    # def rename_and_standardize_bin_names(self, task_params):
-    #     """
-    #     generate_command: generate renamed bins
-    #     """
-    #     log("\n\nRunning rename_and_standardize_bin_names")
-    #     path_to_anvio_result_bins = os.path.abspath(self.BINNER_RESULT_DIRECTORY) + \
-    #         '/' + self.BINNER_BIN_RESULT_DIR + '/'
-    #     for dirname, subdirs, files in os.walk(path_to_anvio_result_bins):
-    #         for file in files:
-    #             if file.endswith('.fa'):
-    #                 os.rename(os.path.abspath(path_to_anvio_result_bins) + '/' +
-    #                           file, os.path.abspath(path_to_anvio_result_bins) + '/bin.' +
-    #                           file.split('.fa')[0].zfill(3) + '.fasta')  # need to change to 4 digits
-
-    # def revert_fasta_headers(self, task_params):
-    #     path_to_anvio_result_bins = os.path.join(
-    #         self.scratch,
-    #         self.BINNER_RESULT_DIRECTORY,
-    #         self.BINNER_BIN_RESULT_DIR
-    #         )
-    #     for filepath in [os.path.join(path_to_anvio_result_bins, filename) for filename in os.listdir(path_to_anvio_result_bins)]:
-    #         self.fhr.revert_fasta_headers(filepath)
-
-
-    # def make_binned_contig_summary_file_for_binning_apps(self, task_params):
-    #     """
-    #     generate_command: generate binned contig summary command
-    #     """
-    #     log("\n\nRunning make_binned_contig_summary_file_for_binning_apps")
-    #     path_to_anvio_result = os.path.abspath(self.BINNER_RESULT_DIRECTORY)
-    #     path_to_anvio_result_bins = '{}/{}/'.format(path_to_anvio_result, self.BINNER_BIN_RESULT_DIR)
-    #     path_to_summary_file = path_to_anvio_result_bins + 'binned_contig.summary'
-    #     with open(path_to_summary_file, 'w+') as f:
-    #         f.write("Bin name\tCompleteness\tGenome size\tGC content\n")
-    #         for dirname, subdirs, files in os.walk(path_to_anvio_result_bins):
-    #             for file in files:
-    #                 if file.endswith('.fasta'):
-    #                     genome_bin_fna_file = os.path.join(self.BINNER_BIN_RESULT_DIR, file)
-    #                     bbstats_output_file = os.path.join(self.scratch, self.BINNER_RESULT_DIRECTORY,
-    #                                                        genome_bin_fna_file).split('.fasta')[0] + ".bbstatsout"
-    #                     bbstats_output = self.generate_stats_for_genome_bins(task_params,
-    #                                                                          genome_bin_fna_file,
-    #                                                                          bbstats_output_file)
-    #                     f.write('{}\t0\t{}\t{}\n'.format(genome_bin_fna_file.split("/")[-1],
-    #                                                      bbstats_output['contig_bp'],
-    #                                                      bbstats_output['gc_avg']))
-    #     f.close()
-    #     log('Finished make_binned_contig_summary_file_for_binning_apps function')
-
     def run_anvi_run_hmms(self):
         command = 'anvi-run-hmms '
         command += '-c contigs.db '
@@ -642,7 +423,6 @@ class AnvioUtil:
         command += '--quiet '.format(self.MAPPING_THREADS)
         log('running anvi_run_hmms: {}'.format(command))
         self._run_command(command)
-
 
     def run_anvi_run_ncbi_cog(self):
         command = 'anvi-run-ncbi-cogs '
@@ -654,7 +434,7 @@ class AnvioUtil:
         self._run_command(command)
 
     def run_anvi_run_pfams(self):
-        command = 'anvi-run-ncbi-cogs '
+        command = 'anvi-run-pfams '
         command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
         command += '--pfam-data-dir /data/anviodb/Pfam'
@@ -709,6 +489,12 @@ class AnvioUtil:
         log('running anvi-run-trna-taxonomy: {}'.format(command))
         self._run_command(command)
 
+    def generate_dummy_anvio_profile(self):
+        command = 'anvi-profile '
+        command += '-c contigs.db '
+        command += '-o BLANK-PROFILE/ '
+        command += '-S BLANK'
+        log('running anvi-profile: {}'.format(command))
 
     def generate_output_file_list(self, result_directory):
         """
@@ -784,25 +570,6 @@ class AnvioUtil:
                             'description': 'HTML summary report for kb_anvio App'})
         return html_report
 
-    # def generate_overview_info(self, assembly_ref, binned_contig_obj_ref, result_directory):
-    #     """
-    #     _generate_overview_info: generate overview information from assembly and binnedcontig
-    #     """
-
-    #     # get assembly and binned_contig objects that already have some data populated in them
-    #     assembly = self.dfu.get_objects({'object_refs': [assembly_ref]})['data'][0]
-    #     binned_contig = self.dfu.get_objects({'object_refs': [binned_contig_obj_ref]})['data'][0]
-
-    #     input_contig_count = assembly.get('data').get('num_contigs')
-    #     binned_contig_count = 0
-    #     total_bins_count = 0
-    #     total_bins = binned_contig.get('data').get('bins')
-    #     total_bins_count = len(total_bins)
-    #     for bin in total_bins:
-    #         binned_contig_count += len(bin.get('contigs'))
-
-    #     return (binned_contig_count, input_contig_count, total_bins_count)
-
     def move_files_to_output_folder(self, task_params):
         shutil.move(os.path.join(self.scratch, "contigs.db"), os.path.join(self.scratch, "anvio_output_dir"))
         shutil.move(os.path.join(self.scratch, task_params['contig_file_path']), os.path.join(self.scratch, "anvio_output_dir"))
@@ -810,8 +577,8 @@ class AnvioUtil:
             shutil.move(os.path.join(self.scratch, "SAMPLES-MERGED"), os.path.join(self.scratch, "anvio_output_dir"))
         else:
             shutil.move(glob.glob(os.path.join(self.scratch,'*_RAW'))[0], os.path.join(self.scratch, "anvio_output_dir"))
-
-
+        else:
+            shutil.move(os.path.join(self.scratch, "BLANK-PROFILE"), os.path.join(self.scratch, "anvio_output_dir"))
 
     def generate_report(self, task_params):
         """
@@ -846,26 +613,6 @@ class AnvioUtil:
         report_output = {'report_name': output['name'], 'report_ref': output['ref']}
 
         return report_output
-
-    # def create_dict_from_depth_file(self, depth_file_path):
-    #     # keep contig order (required by metabat2)
-    #     depth_file_dict = {}
-    #     with open(depth_file_path, 'r') as f:
-    #         header = f.readline().rstrip().split("\t")
-    #         # print('HEADER1 {}'.format(header))
-    #         # map(str.strip, header)
-    #         for line in f:
-    #             # deal with cases were fastq name has spaces.Assume first
-    #             # non white space word is unique and use this as ID.
-    #             # line = line.rstrip()
-    #             vals = line.rstrip().split("\t")
-    #             if ' ' in vals[0]:
-    #                 ID = vals[0].split()[0]
-    #             else:
-    #                 ID = vals[0]
-    #             depth_file_dict[ID] = vals[1:]
-    #         depth_file_dict['header'] = header
-    #     return depth_file_dict
 
     def run_anvio(self, task_params):
         """
@@ -903,19 +650,17 @@ class AnvioUtil:
 
         self.run_anvi_gen_contigs_database(task_params)
 
-
-        # clean the assembly file so that there are no spaces in the fasta headers
-        #assembly_clean = self.retrieve_and_clean_assembly(task_params)
-        #task_params['contig_file_path'] = assembly_clean
-
         self.run_anvi_run_hmms()
+
         self.run_anvi_run_ncbi_cog()
+        
         self.run_anvi_run_pfams()
-        self.run_anvi_run_kegg_kofams()
-        #self.run_anvi_run_interacdome()
-        #self.run_anvi_run_scg_taxonomy()
-        #self.run_anvi_scan_trnas()
-        #self.run_anvi_run_trna_taxonomy()
+
+        # self.run_anvi_run_kegg_kofams()
+        # self.run_anvi_run_interacdome()
+        # self.run_anvi_run_scg_taxonomy()
+        # self.run_anvi_scan_trnas()
+        # self.run_anvi_run_trna_taxonomy()
 
         # get reads
         if task_params['reads_list']:
@@ -923,6 +668,8 @@ class AnvioUtil:
             task_params['read_type'] = read_type
             task_params['reads_list_file'] = reads_list_file
             self.generate_alignment_bams_and_prep_for_anvio(task_params, assembly_reformatted)
+        else:
+            self.generate_dummy_anvio_profile()
 
         # file handling and management
         os.chdir(cwd)
@@ -931,15 +678,6 @@ class AnvioUtil:
         log('Saved result files to: {}'.format(result_directory))
         log('Generated files:\n{}'.format('\n'.join(os.listdir(result_directory))))
 
-        # make new BinnedContig object and upload to KBase
-        # generate_binned_contig_param = {
-        #     'file_directory': os.path.join(result_directory, self.BINNER_BIN_RESULT_DIR),
-        #     'assembly_ref': task_params['assembly_ref'],
-        #     'binned_contig_name': task_params['binned_contig_name'],
-        #     'workspace_name': task_params['workspace_name']
-        # }
-
-        # generate report
         reportVal = self.generate_report(task_params)
         returnVal = {
             'result_directory': result_directory,
