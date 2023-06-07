@@ -575,7 +575,7 @@ class AnvioUtil:
         shutil.move(os.path.join(self.scratch, task_params['contig_file_path']), os.path.join(self.scratch, "anvio_output_dir"))
         if len(task_params['reads_list']) > 1:
             shutil.move(os.path.join(self.scratch, "SAMPLES-MERGED"), os.path.join(self.scratch, "anvio_output_dir"))
-        else:
+        elif len(task_params['reads_list']) == 1:
             shutil.move(glob.glob(os.path.join(self.scratch,'*_RAW'))[0], os.path.join(self.scratch, "anvio_output_dir"))
         else:
             shutil.move(os.path.join(self.scratch, "BLANK-PROFILE"), os.path.join(self.scratch, "anvio_output_dir"))
@@ -653,7 +653,7 @@ class AnvioUtil:
         self.run_anvi_run_hmms()
 
         self.run_anvi_run_ncbi_cog()
-        
+
         self.run_anvi_run_pfams()
 
         # self.run_anvi_run_kegg_kofams()
