@@ -206,6 +206,10 @@
                     "target_property": "contig_split_size"
                 },
                 {
+                    "input_parameter": "ncbi_cog_diamond_mode",
+                    "target_property": "ncbi_cog_diamond_mode"
+                },
+                {
                     "input_parameter": "kmer_size",
                     "target_property": "kmer_size"
                 },
