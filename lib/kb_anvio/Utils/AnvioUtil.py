@@ -402,7 +402,7 @@ class AnvioUtil:
             self.run_anvi_profile(raw_sorted_bam)
 
         if len(task_params['reads_list']) > 1:
-            self.run_anvi_merge(task_params)
+            self.run_anvi_merge()
 
         return sorted_bam_file_list
 

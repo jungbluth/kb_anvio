@@ -16,7 +16,6 @@ ToDo
 * Databases prepared using following scripts: anvi-setup-pfams, anvi-setup-ncbi-cogs
 * Read sets can be used for input to allow a sense of contig/scaffold coverage
 * Product is contigs database and profiles compatible with Anvi'o
-* Added function to select sensitive diamond search
 
 0.0.1
 -----
