@@ -7,13 +7,16 @@ ToDo
 * Interactome, PDB, and others as modules
 * Install more missing software from list here: https://anvio.org/install/
 * List database versions in documentation
-
+* Generate a better summary for inside the narrative
+* Add way to perform scan across read mappers
+* Improve report
 
 1.0.0 ***Beta release***
 -----
-* Databases prepared using following scripts: anvi-setup-pfams, anvi-setup-ncbi-cogs, anvi-setup-trna-taxonomy, 
-* Reads sets can be used for input to allow a sense of contig/scaffold coverage
-*
+* Databases prepared using following scripts: anvi-setup-pfams, anvi-setup-ncbi-cogs
+* Read sets can be used for input to allow a sense of contig/scaffold coverage
+* Product is contigs database and profiles compatible with Anvi'o
+* Added function to select sensitive diamond search
 
 0.0.1
 -----

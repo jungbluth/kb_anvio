@@ -24,7 +24,8 @@ module kb_anvio {
         min_contig_length: minimum contig length; default 1000bp
         contig_split_size: length to split long contigs; default 10000bp
         kmer_size: size of kmers
-        trna_run: size of kmers
+        ncbi_cog_diamond_mode: search mode for diamond
+        trna_run: run trna tooling
         ref: https://github.com/merenlab/anvio
 
     */
@@ -37,6 +38,7 @@ module kb_anvio {
         int min_contig_length;
         int contig_split_size;
         int kmer_size;
+        string ncbi_cog_diamond_mode;
         string trna_run;
 
     } AnvioInputParams;

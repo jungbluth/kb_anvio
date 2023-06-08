@@ -406,7 +406,7 @@ class AnvioUtil:
 
         return sorted_bam_file_list
 
-    def run_anvi_merge(self, task_params):
+    def run_anvi_merge(self):
         command = 'anvi-merge '
         command += '*/PROFILE.db '
         command += '-o SAMPLES-MERGED '
@@ -424,11 +424,12 @@ class AnvioUtil:
         log('running anvi_run_hmms: {}'.format(command))
         self._run_command(command)
 
-    def run_anvi_run_ncbi_cog(self):
+    def run_anvi_run_ncbi_cog(self, task_params):
         command = 'anvi-run-ncbi-cogs '
         command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
-        command += '--sensitive '
+        if task_params['ncbi_cog_diamond_mode'] == 'sensitive':
+            command += '--sensitive '
         command += '--cog-data-dir /data/anviodb/COG'
         log('running anvi_run_ncbi_cog: {}'.format(command))
         self._run_command(command)
@@ -549,13 +550,14 @@ class AnvioUtil:
 
         # get summary data from existing assembly object and bins_objects
         Summary_Table_Content = ''
-        Overview_Content = ''
+        Overview_Content = 'This report is intentially empty.'
         # (binned_contig_count, input_contig_count, total_bins_count) = \
         #     self.generate_overview_info(assembly_ref, binned_contig_obj_ref, result_directory)
-
         # Overview_Content += '<p>Binned contigs: {}</p>'.format(binned_contig_count)
         # Overview_Content += '<p>Input contigs: {}</p>'.format(input_contig_count)
         # Overview_Content += '<p>Number of bins: {}</p>'.format(total_bins_count)
+
+        Overview_Content += '<p>Anvio interactivity is not yet supported in KBase, so users will still need to run Anvio locally to properly interact with and explore output files.</p>'
 
         with open(result_file_path, 'w') as result_file:
             with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
@@ -582,6 +584,27 @@ class AnvioUtil:
             shutil.move(glob.glob(os.path.join(self.scratch,'*_RAW'))[0], os.path.join(self.scratch, "anvio_output_dir"))
         else:
             shutil.move(os.path.join(self.scratch, "BLANK-PROFILE"), os.path.join(self.scratch, "anvio_output_dir"))
+
+
+    # def generate_overview_info(self, assembly_ref, result_directory):
+    #     """
+    #     _generate_overview_info: generate overview information from assembly and binnedcontig
+    #     """
+
+    #     # get assembly and binned_contig objects that already have some data populated in them
+    #     assembly = self.dfu.get_objects({'object_refs': [assembly_ref]})['data'][0]
+    #     binned_contig = self.dfu.get_objects({'object_refs': [binned_contig_obj_ref]})['data'][0]
+
+    #     input_contig_count = assembly.get('data').get('num_contigs')
+    #     binned_contig_count = 0
+    #     total_bins_count = 0
+    #     total_bins = binned_contig.get('data').get('bins')
+    #     total_bins_count = len(total_bins)
+    #     for bin in total_bins:
+    #         binned_contig_count += len(bin.get('contigs'))
+
+    #     return (binned_contig_count, input_contig_count, total_bins_count)
+
 
     def generate_report(self, task_params):
         """
@@ -628,7 +651,9 @@ class AnvioUtil:
             for input to anvio
 
         optional params:
-            min_contig_length: minimum contig length; default 1000
+            min_contig_length: minimum contig length; default 100
+            contig_split_size: split size for large contigs; default 5000
+            kmer_size: size of kmers for nucleotide decomposition; default 4
 
         """
         log('--->\nrunning AnvioUtil.run_anvio\n' +

@@ -178,6 +178,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': []})
 
@@ -194,6 +195,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref]})
 
@@ -212,6 +214,7 @@ class kb_anvioTest(unittest.TestCase):
                                              'min_contig_length': 3000,
                                              'contig_split_size': 20000,
                                              'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
                                              'trna_run': 'yes',
                                              'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -229,6 +232,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -246,6 +250,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -263,6 +268,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -280,6 +286,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -297,6 +304,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -314,6 +322,7 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
 
@@ -331,5 +340,6 @@ class kb_anvioTest(unittest.TestCase):
     #                                          'min_contig_length': 3000,
     #                                          'contig_split_size': 20000,
     #                                          'kmer_size': 4,
+    #                                          'ncbi_cog_diamond_mode': 'fast',
     #                                          'trna_run': 'no',
     #                                          'reads_list': [self.int1_oldstyle_reads_ref]})       
