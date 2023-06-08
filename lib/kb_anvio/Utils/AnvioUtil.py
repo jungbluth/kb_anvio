@@ -680,7 +680,7 @@ class AnvioUtil:
 
         self.run_anvi_run_hmms()
 
-        self.run_anvi_run_ncbi_cog()
+        self.run_anvi_run_ncbi_cog(task_params)
 
         self.run_anvi_run_pfams()
 

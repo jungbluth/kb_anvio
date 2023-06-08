@@ -59,7 +59,7 @@ parameters :
         long-hint  : kmer length (default 4)
 
     ncbi_cog_diamond_mode :
-        ui-name : DIAMOND search mode for NCBI COG search step
+        ui-name : NCBI COG identication DIAMOND search mode
         short-hint : diamond mode (default fast)
         long-hint  : diamond mode (default fast)
 
