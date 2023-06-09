@@ -165,39 +165,39 @@ class kb_anvioTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
-    # def test_run_anvio_no_read_input_test(self):
-    #     method_name = 'test_run_anvio_no_read_input_test'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bowtie2_default',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': []})
+    def test_run_anvio_no_read_input_test(self):
+        method_name = 'test_run_anvio_no_read_input_test'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bowtie2_default',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': []})
 
-    # def test_run_anvio_multiple_read_input_test1(self):
-    #     method_name = 'test_run_anvio_multiple_read_input_test1'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bowtie2_default',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref]})
+    def test_run_anvio_multiple_read_input_test1(self):
+        method_name = 'test_run_anvio_multiple_read_input_test1'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bowtie2_default',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref, self.int2_oldstyle_reads_ref]})
 
 
     def test_run_anvio_trna(self):
@@ -218,128 +218,128 @@ class kb_anvioTest(unittest.TestCase):
                                              'trna_run': 'yes',
                                              'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_bbmap_default(self):
-    #     method_name = 'test_run_anvio_bbmap_default'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_bbmap_default(self):
+        method_name = 'test_run_anvio_bbmap_default'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bbmap_default',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bbmap_default',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_bbmap_fast(self):
-    #     method_name = 'test_run_anvio_bbmap_fast'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_bbmap_fast(self):
+        method_name = 'test_run_anvio_bbmap_fast'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bbmap_fast',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bbmap_fast',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_bbmap_very_sensitive(self):
-    #     method_name = 'test_run_anvio_bbmap_very_sensitive'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_bbmap_very_sensitive(self):
+        method_name = 'test_run_anvio_bbmap_very_sensitive'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bbmap_very_sensitive',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bbmap_very_sensitive',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_bowtie2_default(self):
-    #     method_name = 'test_run_anvio_bowtie2_default'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_bowtie2_default(self):
+        method_name = 'test_run_anvio_bowtie2_default'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bowtie2_default',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bowtie2_default',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_bowtie2_very_sensitive(self):
-    #     method_name = 'test_run_anvio_bowtie2_very_sensitive'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_bowtie2_very_sensitive(self):
+        method_name = 'test_run_anvio_bowtie2_very_sensitive'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'bowtie2_very_sensitive',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'bowtie2_very_sensitive',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_minimap2(self):
-    #     method_name = 'test_run_anvio_minimap2'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_minimap2(self):
+        method_name = 'test_run_anvio_minimap2'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'minimap2',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'minimap2',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})
 
-    # def test_run_anvio_hisat2(self):
-    #     method_name = 'test_run_anvio_hisat2'
-    #     print ("\n=================================================================")
-    #     print ("RUNNING "+method_name+"()")
-    #     print ("=================================================================\n")
+    def test_run_anvio_hisat2(self):
+        method_name = 'test_run_anvio_hisat2'
+        print ("\n=================================================================")
+        print ("RUNNING "+method_name+"()")
+        print ("=================================================================\n")
 
-    #     # anvio should run to completion here
-    #     ret = self.getImpl().run_kb_anvio(self.getContext(),
-    #                                         {'workspace_name': self.getWsName(),
-    #                                          'assembly_ref': self.assembly_ref1,
-    #                                          'read_mapping_tool': 'hisat2',
-    #                                          'min_contig_length': 3000,
-    #                                          'contig_split_size': 20000,
-    #                                          'kmer_size': 4,
-    #                                          'ncbi_cog_diamond_mode': 'fast',
-    #                                          'trna_run': 'no',
-    #                                          'reads_list': [self.int1_oldstyle_reads_ref]})       
+        # anvio should run to completion here
+        ret = self.getImpl().run_kb_anvio(self.getContext(),
+                                            {'workspace_name': self.getWsName(),
+                                             'assembly_ref': self.assembly_ref1,
+                                             'read_mapping_tool': 'hisat2',
+                                             'min_contig_length': 3000,
+                                             'contig_split_size': 20000,
+                                             'kmer_size': 4,
+                                             'ncbi_cog_diamond_mode': 'fast',
+                                             'trna_run': 'no',
+                                             'reads_list': [self.int1_oldstyle_reads_ref]})       

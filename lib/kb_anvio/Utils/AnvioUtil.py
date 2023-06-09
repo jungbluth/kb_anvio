@@ -150,7 +150,6 @@ class AnvioUtil:
         contig_file_path = task_params['contig_file_path']
         contig_split_size = task_params['contig_split_size']
         kmer_size = task_params['kmer_size']
-
         clean_contig_file_path = task_params['contig_file_path'] + "_anvio-reformatted"
         command = 'anvi-gen-contigs-database '
         command += '-f {} '.format(contig_file_path)
@@ -462,7 +461,7 @@ class AnvioUtil:
         self._run_command(command)
 
     def run_anvi_run_scg_taxonomy(self):
-        command = 'anvi-setup-scg-taxonomy -T 1 && '
+        command = 'anvi-setup-scg-taxonomy -T 1 --reset && '
         command += 'anvi-run-scg-taxonomy '
         command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
@@ -473,7 +472,7 @@ class AnvioUtil:
         self._run_command(command)
 
     def run_anvi_scan_trnas(self):
-        command = 'anvi-setup-trna-taxonomy -T 1 && '
+        command = 'anvi-setup-trna-taxonomy -T 1 --reset && '
         command += 'anvi-scan-trnas '
         command += '-c contigs.db '
         command += '--num-threads {} '.format(self.MAPPING_THREADS)
@@ -675,6 +674,10 @@ class AnvioUtil:
 
         assembly_reformatted = self.run_anvi_script_reformat_fasta(task_params)
         task_params['contig_file_path'] = assembly_reformatted
+
+        # need to remove contigs.db file for local testing purposes
+        if os.path.exists('/kb/module/work/tmp/contigs.db'):
+            os.remove('/kb/module/work/tmp/contigs.db')
 
         self.run_anvi_gen_contigs_database(task_params)
 
