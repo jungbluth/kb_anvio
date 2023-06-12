@@ -535,44 +535,44 @@ class AnvioUtil:
 
         return output_files
 
-    def generate_html_report(self, result_directory, assembly_ref):
-        """
-        generate_html_report: generate html summary report
-        """
+    # def generate_html_report(self, result_directory, assembly_ref):
+    #     """
+    #     generate_html_report: generate html summary report
+    #     """
 
-        log('Start generating html report')
-        html_report = list()
+    #     log('Start generating html report')
+    #     html_report = list()
 
-        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
-        self._mkdir_p(output_directory)
-        result_file_path = os.path.join(output_directory, 'report.html')
+    #     output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+    #     self._mkdir_p(output_directory)
+    #     result_file_path = os.path.join(output_directory, 'report.html')
 
-        # get summary data from existing assembly object and bins_objects
-        Summary_Table_Content = ''
-        Overview_Content = 'This report is intentially empty.'
-        # (binned_contig_count, input_contig_count, total_bins_count) = \
-        #     self.generate_overview_info(assembly_ref, binned_contig_obj_ref, result_directory)
-        # Overview_Content += '<p>Binned contigs: {}</p>'.format(binned_contig_count)
-        # Overview_Content += '<p>Input contigs: {}</p>'.format(input_contig_count)
-        # Overview_Content += '<p>Number of bins: {}</p>'.format(total_bins_count)
+    #     # get summary data from existing assembly object and bins_objects
+    #     Summary_Table_Content = ''
+    #     Overview_Content = 'This report is intentially empty.'
+    #     # (binned_contig_count, input_contig_count, total_bins_count) = \
+    #     #     self.generate_overview_info(assembly_ref, binned_contig_obj_ref, result_directory)
+    #     # Overview_Content += '<p>Binned contigs: {}</p>'.format(binned_contig_count)
+    #     # Overview_Content += '<p>Input contigs: {}</p>'.format(input_contig_count)
+    #     # Overview_Content += '<p>Number of bins: {}</p>'.format(total_bins_count)
 
-        Overview_Content += '<p>Anvio interactivity is not yet supported in KBase, so users will still need to run Anvio locally to properly interact with and explore output files.</p>'
+    #     Overview_Content += '<p>Anvio interactivity is not yet supported in KBase, so users will still need to run Anvio locally to properly interact with and explore output files.</p>'
 
-        with open(result_file_path, 'w') as result_file:
-            with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
-                      'r') as report_template_file:
-                report_template = report_template_file.read()
-                report_template = report_template.replace('<p>Overview_Content</p>',
-                                                          Overview_Content)
-                report_template = report_template.replace('Summary_Table_Content',
-                                                          Summary_Table_Content)
-                result_file.write(report_template)
+    #     with open(result_file_path, 'w') as result_file:
+    #         with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
+    #                   'r') as report_template_file:
+    #             report_template = report_template_file.read()
+    #             report_template = report_template.replace('<p>Overview_Content</p>',
+    #                                                       Overview_Content)
+    #             report_template = report_template.replace('Summary_Table_Content',
+    #                                                       Summary_Table_Content)
+    #             result_file.write(report_template)
 
-        html_report.append({'path': result_file_path,
-                            'name': os.path.basename(result_file_path),
-                            'label': os.path.basename(result_file_path),
-                            'description': 'HTML summary report for kb_anvio App'})
-        return html_report
+    #     html_report.append({'path': result_file_path,
+    #                         'name': os.path.basename(result_file_path),
+    #                         'label': os.path.basename(result_file_path),
+    #                         'description': 'HTML summary report for kb_anvio App'})
+    #     return html_report
 
     def move_files_to_output_folder(self, task_params):
         shutil.move(os.path.join(self.scratch, "contigs.db"), os.path.join(self.scratch, "anvio_output_dir"))
@@ -604,12 +604,39 @@ class AnvioUtil:
 
     #     return (binned_contig_count, input_contig_count, total_bins_count)
 
+    def export_anvio_files_to_staging(self, ctx, file_to_staging):
+        #self.se.export_to_staging({'input_ref': INPUT_REF, 'workspace_name': WS_NAME, 'destination_dir' : DESTDIR})
+        destination_dir = 'anvio_export'
+        STAGING_GLOBAL_FILE_PREFIX = '/data/bulk/'
+        STAGING_USER_FILE_PREFIX = '/staging/'
+        token_user = ctx['user_id']
+        if os.path.exists(STAGING_USER_FILE_PREFIX):
+            staging_dir_prefix = STAGING_USER_FILE_PREFIX
+        else:
+            staging_dir_prefix = os.path.join(STAGING_GLOBAL_FILE_PREFIX, token_user)
+        staging_dir = os.path.join(staging_dir_prefix, destination_dir)
+        self._mkdir_p(staging_dir)
+        shutil.copy2(file_to_staging, staging_dir)
+        # This is a KBase specific hack to allow the staging service to delete the files and
+        # folders written by this module. Currently the staging service runs as user 800 and
+        # this module runs as root (bleah) so the staging service throws an error if the user
+        # tries to delete the folder. The staging service belongs to the root group, however,
+        # so if we add write privs to the root group that solves the issue.
+        # Longer term this app should not run as root and should chown ownership to the staging
+        # service when it has a static user name vs. a number that might change.
+        basemode = os.stat(staging_dir).st_mode
+        self._recursive_chmod(staging_dir, basemode | stat.S_IWGRP)
+        
+        if not (set(os.listdir(staging_dir)) >= set(files)):
+            raise ValueError('Unexpected error occurred during copying files')
 
-    def generate_report(self, task_params):
+
+
+    def end_anvio(self, ctx, task_params):
         """
-        generate_report: generate summary report
+        move Anvio output to staging: move output to staging
         """
-        log('Generating report')
+        log('Moving Anvio files to staging')
 
         result_directory = os.path.join(self.scratch, "anvio_output_dir")
 
@@ -619,27 +646,56 @@ class AnvioUtil:
 
         output_files = self.generate_output_file_list(task_params['result_directory'])
 
-        output_html_files = self.generate_html_report(task_params['result_directory'],
-                                                      task_params['assembly_ref'])
+        
+        log('Output_files')
+        log(output_files)
 
-        report_params = {
-            'message': '',
-            'workspace_name': task_params['workspace_name'],
-            'file_links': output_files,
-            'html_links': output_html_files,
-            'direct_html_link_index': 0,
-            'html_window_height': 266,
-            'report_object_name': 'kb_anvio_report_' + str(uuid.uuid4())
+        zip_file_path = str(output_files[0]['path'])
+
+        self.export_anvio_files_to_staging(ctx, zip_file_path)
+
+        returnVal = {
+            'result_directory': zip_file_path,
         }
 
-        kbase_report_client = KBaseReport(self.callback_url)
-        output = kbase_report_client.create_extended_report(report_params)
+        return returnVal
 
-        report_output = {'report_name': output['name'], 'report_ref': output['ref']}
 
-        return report_output
+    # def generate_report(self, task_params):
+    #     """
+    #     generate_report: generate summary report
+    #     """
+    #     log('Generating report')
 
-    def run_anvio(self, task_params):
+    #     result_directory = os.path.join(self.scratch, "anvio_output_dir")
+
+    #     task_params['result_directory'] = result_directory
+
+    #     self.move_files_to_output_folder(task_params)
+
+    #     output_files = self.generate_output_file_list(task_params['result_directory'])
+
+    #     output_html_files = self.generate_html_report(task_params['result_directory'],
+    #                                                   task_params['assembly_ref'])
+
+    #     report_params = {
+    #         'message': '',
+    #         'workspace_name': task_params['workspace_name'],
+    #         'file_links': output_files,
+    #         'html_links': output_html_files,
+    #         'direct_html_link_index': 0,
+    #         'html_window_height': 266,
+    #         'report_object_name': 'kb_anvio_report_' + str(uuid.uuid4())
+    #     }
+
+    #     kbase_report_client = KBaseReport(self.callback_url)
+    #     output = kbase_report_client.create_extended_report(report_params)
+
+    #     report_output = {'report_name': output['name'], 'report_ref': output['ref']}
+
+    #     return report_output
+
+    def run_anvio(self, ctx, task_params):
         """
         run_anvio: anvio app
 
@@ -681,17 +737,17 @@ class AnvioUtil:
 
         self.run_anvi_gen_contigs_database(task_params)
 
-        self.run_anvi_run_hmms()
+        #self.run_anvi_run_hmms()
 
-        self.run_anvi_run_ncbi_cog(task_params)
+        #self.run_anvi_run_ncbi_cog(task_params)
 
-        self.run_anvi_run_pfams()
+        #self.run_anvi_run_pfams()
 
         # self.run_anvi_run_kegg_kofams()
 
         # self.run_anvi_run_interacdome()
 
-        self.run_anvi_run_scg_taxonomy()
+        #self.run_anvi_run_scg_taxonomy()
 
         if task_params['trna_run'] == 'yes':
             self.run_anvi_scan_trnas()
@@ -713,10 +769,12 @@ class AnvioUtil:
         log('Saved result files to: {}'.format(result_directory))
         log('Generated files:\n{}'.format('\n'.join(os.listdir(result_directory))))
 
-        reportVal = self.generate_report(task_params)
-        returnVal = {
-            'result_directory': result_directory,
-        }
-        returnVal.update(reportVal)
+        returnVal = self.end_anvio(ctx, task_params)
 
         return returnVal
+
+        # reportVal = self.generate_report(task_params)
+
+        # returnVal.update(reportVal)
+
+        # return returnVal

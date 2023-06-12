@@ -72,7 +72,7 @@ class kb_anvio:
 
         anvio_runner = AnvioUtil(self.config)
 
-        returnVal = anvio_runner.run_anvio(params)
+        returnVal = anvio_runner.run_anvio(ctx, params)
         #END run_kb_anvio
 
         # At some point might do deeper type checking...
